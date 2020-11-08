@@ -8,18 +8,14 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:id="@+id/contentFrame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <include layout="@layout/toolbar"/>
-        </LinearLayout>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    </ScrollView>
+        <include layout="@layout/toolbar" />
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -28,5 +24,14 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu" />
+        app:menu="@menu/nav_menu">
+
+    </com.google.android.material.navigation.NavigationView>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp" />
+
 </androidx.drawerlayout.widget.DrawerLayout>
