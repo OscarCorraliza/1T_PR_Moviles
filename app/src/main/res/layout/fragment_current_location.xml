@@ -3,11 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.CurrentLocation"
-    >
+    tools:context=".fragments.CurrentLocation">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#4F7BB6"/>
+        android:layout_height="match_parent">
+        <org.osmdroid.views.MapView
+            android:id="@+id/mapViewCurrentLocation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+
 
 </FrameLayout>

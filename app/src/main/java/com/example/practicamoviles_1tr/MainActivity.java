@@ -37,6 +37,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Double longitude=0.0;
     private Fragment locationFragment;
 
+    public static final String TITLE_KEY = "TITLE_KEY";
+    public static final String TITLE = "My location";
+    public static final String DESCRIPTION_KEY = "DESCRIPTION_KEY";
+    public static final String DESCRIPTION = "This is my location";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,9 +98,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (menuItem.getItemId()){
             case R.id.ubicacionactual:
                 Log.d("","Value of latitude: ".concat(String.valueOf(latitude)));
-                System.out.println("Ha pasado");
+                System.out.println("Ha pasado"+latitude);
                 //intent para mapa posicion actual
-
+                Intent locationIntent = new Intent(MainActivity.this, CurrentLocation.class);
+                locationIntent.putExtra(TITLE_KEY,TITLE);
+                locationIntent.putExtra(DESCRIPTION_KEY,DESCRIPTION);
+                locationIntent.putExtra(LATITUDE, latitude);
+                locationIntent.putExtra(LONGITUDE, longitude);
 
                 //cambia el fragment
                 setFragment(1);
@@ -123,7 +132,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
-
+            //este servicio inicia el gps
+            startService();
         }
     }
 
