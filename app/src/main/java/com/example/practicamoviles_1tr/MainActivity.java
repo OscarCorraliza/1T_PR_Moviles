@@ -4,17 +4,16 @@ import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Menu;
 import android.widget.Toast;
 
-import com.example.practicamoviles_1tr.fragments.MyLocationFragment;
+import com.example.practicamoviles_1tr.fragments.CurrentLocation;
+import com.example.practicamoviles_1tr.fragments.HomeFragment;
 import com.example.practicamoviles_1tr.services.RunGPS;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -23,14 +22,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import static com.example.practicamoviles_1tr.common.Constantes.INTENT_LOCALIZATION_ACTION;
 import static com.example.practicamoviles_1tr.common.Constantes.LATITUDE;
 import static com.example.practicamoviles_1tr.common.Constantes.LONGITUDE;
 
@@ -53,10 +50,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setToolbar();
         //llamamos al metodo de mas abajo que inicia el servicio del gps(sin funcion todavia)
         getGPS();
-
-        //se come la toolbar
         //hay que establecer el fragment de inicio
-        setFragment(1);
+        setFragment(0);
+        //activamos el broadcast receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter(INTENT_LOCALIZATION_ACTION));
+
+        //activamos el listener para el navView para que pueda cambiar cuando se pulsa una opcion del menu
+        if (navView != null) {
+            navView.setNavigationItemSelectedListener(this);
+        }
 
 
     }
@@ -89,7 +92,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (menuItem.getItemId()){
             case R.id.ubicacionactual:
-               setFragment(1);
+                Log.d("","Value of latitude: ".concat(String.valueOf(latitude)));
+                System.out.println("Ha pasado");
+                //intent para mapa posicion actual
+
+
+                //cambia el fragment
+                setFragment(1);
+
         }
         return false;
     }
@@ -137,9 +147,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch(fragment){
             //0 sera el fragment que se muestre al iniciar la app
-            case 1:
-                locationFragment = new MyLocationFragment();
+            case 0:
+                locationFragment = new HomeFragment();
                 manager.beginTransaction().add(R.id.fragmentContainer, locationFragment).commit();
+                break;
+            case 1:
+                locationFragment = new CurrentLocation();
+                manager.beginTransaction().replace(R.id.fragmentContainer, locationFragment).commit();
                 break;
         }
     }
