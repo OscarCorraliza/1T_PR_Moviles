@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">PracticaMoviles_1TR</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Practica polideportivos</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_ubicacion">Ubicación actual</string>
+    <string name="menu_guardarubicacion">Guardar ubicación</string>
+    <string name="menu_instalacionesdeportivas">Instalaciones deportivas</string>
+    <string name="menu_piscinas">Piscinas</string>
+    <string name="menu_favoritos">Favoritos</string>
+    <string name="menu_paginasinteres">Páginas de interés</string>
+</resources>
