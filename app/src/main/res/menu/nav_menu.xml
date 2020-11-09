@@ -3,10 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/ubicacionactual"
-            android:icon="@android:drawable/ic_dialog_map"
+            android:icon="@drawable/ic_currentlocation"
             android:title="@string/menu_ubicacion" />
+        <item
+            android:id="@+id/guardarubicacion"
+            android:icon="@drawable/ic_savelocation"
+            android:title="@string/guardar_ubicacion" />
+        <item
+            android:id="@+id/instalacionesdeportivas"
+            android:icon="@drawable/ic_sportlocations"
+            android:title="@string/instalaciones_deportivas" />
+        <item
+            android:id="@+id/piscinas"
+            android:icon="@drawable/ic_poolslocation"
+            android:title="@string/piscinas" />
+    </group>
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/favoritos"
+            android:icon="@drawable/ic_favs"
+            android:title="@string/favoritos" />
+        <item
+            android:id="@+id/paginasinteres"
+            android:icon="@drawable/ic_interestwebs"
+            android:title="@string/paginas_de_interes" />
     </group>
 </menu>
