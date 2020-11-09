@@ -77,6 +77,7 @@ public class CurrentLocation extends Fragment {
         mMapView.setMultiTouchControls(true);
         mMapController = (MapController) mMapView.getController();
         mMapController.setZoom(18);
+        //establece el punto del usuario
         mMapController.setCenter(myGeoPosition);
 
     }
