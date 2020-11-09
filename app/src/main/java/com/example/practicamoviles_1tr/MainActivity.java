@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navView;
     Double latitude=0.0;
     Double longitude=0.0;
-    private Fragment locationFragment;
+    private Fragment fragment;
 
     public static final String TITLE_KEY = "TITLE_KEY";
     public static final String TITLE = "My location";
@@ -146,24 +146,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     //metodo para cambiar fragmentos
-    public void setFragment(int fragment){
+    public void setFragment(int fragmentNum){
         FragmentManager manager = getSupportFragmentManager();
 
         //este bundle se encarga de pasar datos a los fragments como si fuese un intent
         Bundle bundle = new Bundle();
 
-        switch(fragment){
+        switch(fragmentNum){
             //0 sera el fragment que se muestre al iniciar la app
             case 0:
-                locationFragment = new HomeFragment();
-                manager.beginTransaction().add(R.id.fragmentContainer, locationFragment).commit();
+                fragment = new HomeFragment();
+                manager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
                 break;
             case 1:
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
-                locationFragment = new CurrentLocation();
-                locationFragment.setArguments(bundle);
-                manager.beginTransaction().replace(R.id.fragmentContainer, locationFragment).commit();
+                fragment = new CurrentLocation();
+                fragment.setArguments(bundle);
+                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;
         }
     }
