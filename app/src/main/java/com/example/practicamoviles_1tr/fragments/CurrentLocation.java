@@ -23,6 +23,8 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
 
+import static com.example.practicamoviles_1tr.MainActivity.CURRENT_LOCATION_LATITUDE;
+import static com.example.practicamoviles_1tr.MainActivity.CURRENT_LOCATION_LONGITUDE;
 import static com.example.practicamoviles_1tr.MainActivity.DESCRIPTION_KEY;
 import static com.example.practicamoviles_1tr.MainActivity.TITLE;
 import static com.example.practicamoviles_1tr.common.Constantes.LATITUDE;
@@ -33,23 +35,23 @@ public class CurrentLocation extends Fragment {
     private MapView mMapView;
     private MapController mMapController;
     GeoPoint myGeoPosition;
-    View view;
+
 
     private ArrayList<OverlayItem> mOverlayItems = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        view = inflater.inflate(R.layout.fragment_current_location, container, false);
+        View view = inflater.inflate(R.layout.fragment_current_location, container, false);
         //conseguir el contexto del fragment
         Context fragmentContext = container.getContext();
 
         Configuration.getInstance().load(fragmentContext, PreferenceManager.getDefaultSharedPreferences(fragmentContext));
 
         Intent getDataIntent = getActivity().getIntent();
-        myGeoPosition = new GeoPoint(getDataIntent.getDoubleExtra(LATITUDE,0),getDataIntent.getDoubleExtra(LONGITUDE,0));
-        setMap();
+        //myGeoPosition = new GeoPoint(getActivity().getIntent().getDoubleExtra(LATITUDE,0),getActivity().getIntent().getDoubleExtra(LONGITUDE,0));
+        myGeoPosition = new GeoPoint(getArguments().getDouble(CURRENT_LOCATION_LATITUDE), getArguments().getDouble(CURRENT_LOCATION_LONGITUDE));
+        setMap(view);
 
         boolean add = mOverlayItems.add(new OverlayItem(getDataIntent.getStringExtra(TITLE), getDataIntent.getStringExtra(DESCRIPTION_KEY), myGeoPosition));
 
@@ -68,16 +70,21 @@ public class CurrentLocation extends Fragment {
 
         mOverlay.setFocusItemsOnTap(true);
         mMapView.getOverlays().add(mOverlay);
+
+
         return view;
+
+
     }
 
-    public void setMap(){
+    public void setMap(View view){
+        System.out.println("GEOPOSITION: "+myGeoPosition.getLatitude()+"   "+myGeoPosition.getLongitude());
         mMapView = (MapView) view.findViewById(R.id.mapViewCurrentLocation);
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
         mMapController = (MapController) mMapView.getController();
         mMapController.setZoom(18);
-        //establece el punto del usuario
+
         mMapController.setCenter(myGeoPosition);
 
     }

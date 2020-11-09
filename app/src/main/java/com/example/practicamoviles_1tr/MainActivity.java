@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +32,7 @@ import static com.example.practicamoviles_1tr.common.Constantes.INTENT_LOCALIZAT
 import static com.example.practicamoviles_1tr.common.Constantes.LATITUDE;
 import static com.example.practicamoviles_1tr.common.Constantes.LONGITUDE;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private NavigationView navView;
     Double latitude=0.0;
     Double longitude=0.0;
@@ -41,6 +42,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String TITLE = "My location";
     public static final String DESCRIPTION_KEY = "DESCRIPTION_KEY";
     public static final String DESCRIPTION = "This is my location";
+
+    //constantes de los bundle
+    public static final  String CURRENT_LOCATION_LATITUDE = "currentLocationLatitude";
+    public static final  String CURRENT_LOCATION_LONGITUDE = "currentLocationLongitude";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +62,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getGPS();
         //hay que establecer el fragment de inicio
         setFragment(0);
-        //activamos el broadcast receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                new IntentFilter(INTENT_LOCALIZATION_ACTION));
-
         //activamos el listener para el navView para que pueda cambiar cuando se pulsa una opcion del menu
         if (navView != null) {
             navView.setNavigationItemSelectedListener(this);
@@ -97,18 +98,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (menuItem.getItemId()){
             case R.id.ubicacionactual:
-                Log.d("","Value of latitude: ".concat(String.valueOf(latitude)));
-                System.out.println("Ha pasado"+latitude);
-                //intent para mapa posicion actual
-                Intent locationIntent = new Intent(MainActivity.this, CurrentLocation.class);
-                locationIntent.putExtra(TITLE_KEY,TITLE);
-                locationIntent.putExtra(DESCRIPTION_KEY,DESCRIPTION);
-                locationIntent.putExtra(LATITUDE, latitude);
-                locationIntent.putExtra(LONGITUDE, longitude);
-
-                //cambia el fragment
+                System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: "+latitude+"lon: "+longitude);
                 setFragment(1);
-
         }
         return false;
     }
@@ -135,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //este servicio inicia el gps
             startService();
         }
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter(INTENT_LOCALIZATION_ACTION));
     }
 
     @Override
@@ -147,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(getApplicationContext(), R.string.gps_no_ok, Toast.LENGTH_SHORT).show();
             }
         }
+
     }
 
 
@@ -155,6 +149,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setFragment(int fragment){
         FragmentManager manager = getSupportFragmentManager();
 
+        //este bundle se encarga de pasar datos a los fragments como si fuese un intent
+        Bundle bundle = new Bundle();
+
         switch(fragment){
             //0 sera el fragment que se muestre al iniciar la app
             case 0:
@@ -162,7 +159,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 manager.beginTransaction().add(R.id.fragmentContainer, locationFragment).commit();
                 break;
             case 1:
+                bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
+                bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
                 locationFragment = new CurrentLocation();
+                locationFragment.setArguments(bundle);
                 manager.beginTransaction().replace(R.id.fragmentContainer, locationFragment).commit();
                 break;
         }
