@@ -105,8 +105,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (menuItem.getItemId()){
             case R.id.ubicacionactual:
-                System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: "+latitude+"lon: "+longitude);
+                //System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: "+latitude+"lon: "+longitude);
                 setFragment(1);
+                break;
+            case R.id.guardarubicacion:
+
         }
         return false;
     }
@@ -165,12 +168,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragment = new HomeFragment();
                 manager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
                 break;
+            //1 para la opcion de mostrar la ubicacion actual
             case 1:
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
                 fragment = new CurrentLocation();
                 fragment.setArguments(bundle);
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+                break;
+            //2 para el fragment de instalaciones deportivas(mapa)
+            case 2:
+
                 break;
         }
     }
