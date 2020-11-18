@@ -1,5 +1,4 @@
 package com.example.practicamoviles_1tr.api_manager;
-import com.example.practicamoviles_1tr.models.*;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;

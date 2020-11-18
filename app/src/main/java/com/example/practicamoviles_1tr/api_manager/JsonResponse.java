@@ -1,6 +1,7 @@
-package com.example.practicamoviles_1tr.models;
+package com.example.practicamoviles_1tr.api_manager;
 
 
+import com.example.practicamoviles_1tr.models.*;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
