@@ -1,7 +1,6 @@
 package com.example.practicamoviles_1tr.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import com.example.practicamoviles_1tr.R;
 import com.example.practicamoviles_1tr.api_manager.IfaceApi;
 import com.example.practicamoviles_1tr.api_manager.JsonResponse;
 import com.example.practicamoviles_1tr.common.PoolsAdapter;
-import com.example.practicamoviles_1tr.models.Pools;
+import com.example.practicamoviles_1tr.models.MapPoint;
 
 import java.util.List;
 
@@ -26,19 +25,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
 
 public class PoolsFragment extends Fragment {
-    private List<Pools> listPools;
+    private List<MapPoint> listPools;
     private ListView listView =null;
     PoolsAdapter adapter = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pools, container, false);
-
+        getAllPools();
 
         return view;
     }
 
-    public void getAllPokemon(){
+    public void getAllPools(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ENTRY_POINT)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -52,6 +51,10 @@ public class PoolsFragment extends Fragment {
                 if(response!=null && response.body() != null){
                     listPools = response.body().results;
 
+                    System.out.println("listaaaa-------------");
+                    for(MapPoint m:listPools){
+                        System.out.println(m.getTitle());
+                    }
                     adapter=new PoolsAdapter(getContext(), listPools);
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -60,7 +63,7 @@ public class PoolsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JsonResponse> call, Throwable t) {
-
+                System.out.println("NO entra bien");
             }
         });
     }

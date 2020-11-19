@@ -8,18 +8,20 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.practicamoviles_1tr.R;
-import com.example.practicamoviles_1tr.models.Pools;
+import com.example.practicamoviles_1tr.models.MapPoint;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class PoolsAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<Pools> listPools;
+    private List<MapPoint> listPools;
 
+    public PoolsAdapter(Context mContext, List<MapPoint> listPools) {
+        this.mContext = mContext;
+        this.listPools = listPools;
+    }
 
     @Override
     public int getCount() {

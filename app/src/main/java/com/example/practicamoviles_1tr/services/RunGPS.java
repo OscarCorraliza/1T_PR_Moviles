@@ -35,9 +35,9 @@ public class RunGPS extends Service  implements LocationListener{
 
     @SuppressLint("MissingPermission")
     private void startLocation() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean gpsProvider=locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean networkProvider=locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!networkProvider) {
             Intent callGPSSettingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             callGPSSettingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -55,7 +55,6 @@ public class RunGPS extends Service  implements LocationListener{
         if(networkProvider){
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1, 100,  this);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 100,  this);
-
         }
     }
 

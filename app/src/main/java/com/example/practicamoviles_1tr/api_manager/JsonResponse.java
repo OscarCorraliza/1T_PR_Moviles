@@ -9,8 +9,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class JsonResponse {
-    @SerializedName("results")
+    @SerializedName("title")
     @Expose
-    public final List<Pools> results=null;
+    public final List<MapPoint> results=null;
 
 }

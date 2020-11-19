@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.practicamoviles_1tr.common.SplashActivity;
 import com.example.practicamoviles_1tr.fragments.CurrentLocation;
 import com.example.practicamoviles_1tr.fragments.HomeFragment;
+import com.example.practicamoviles_1tr.fragments.PoolsFragment;
 import com.example.practicamoviles_1tr.services.RunGPS;
 import com.google.android.material.navigation.NavigationView;
 
@@ -108,8 +109,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //System.out.println("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: "+latitude+"lon: "+longitude);
                 setFragment(1);
                 break;
-            case R.id.guardarubicacion:
 
+            case R.id.guardarubicacion:
+                break;
+            case R.id.instalacionesdeportivas:
+                break;
+            case R.id.piscinas:
+                setFragment(3);
+                break;
         }
         return false;
     }
@@ -179,6 +186,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //2 para el fragment de instalaciones deportivas(mapa)
             case 2:
 
+                break;
+            case 3:
+                fragment = new PoolsFragment();
+                fragment.setArguments(bundle);
+                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;
         }
     }
