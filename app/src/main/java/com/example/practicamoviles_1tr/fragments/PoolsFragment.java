@@ -25,6 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
 
 public class PoolsFragment extends Fragment {
+
     private List<MapPoint> listPools;
     private ListView listView =null;
     PoolsAdapter adapter = null;
@@ -51,7 +52,7 @@ public class PoolsFragment extends Fragment {
                 if(response!=null && response.body() != null){
                     listPools = response.body().results;
 
-                    System.out.println("listaaaa-------------");
+                    System.out.println("lista-------------");
                     for(MapPoint m:listPools){
                         System.out.println(m.getTitle());
                     }

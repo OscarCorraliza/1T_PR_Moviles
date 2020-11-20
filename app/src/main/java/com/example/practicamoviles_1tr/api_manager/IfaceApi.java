@@ -1,4 +1,6 @@
 package com.example.practicamoviles_1tr.api_manager;
+import com.example.practicamoviles_1tr.models.MapPoint;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.GET;

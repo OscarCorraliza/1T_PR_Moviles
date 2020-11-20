@@ -1,13 +1,12 @@
 package com.example.practicamoviles_1tr.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 
 public class MapPoint implements Serializable {
@@ -21,6 +20,11 @@ public class MapPoint implements Serializable {
     public MapPoint(String title, Location location) {
         this.title = title;
         this.location = location;
+    }
+    public MapPoint(){}
+
+    protected MapPoint(Parcel in) {
+        title = in.readString();
     }
 
     public String getTitle() {

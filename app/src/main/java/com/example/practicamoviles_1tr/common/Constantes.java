@@ -5,7 +5,6 @@ public class Constantes {
     public static final String LONGITUDE = "LONGITUDE";
     //constante para el broadcast
     public static final String INTENT_LOCALIZATION_ACTION = "location_position";
-
     //urls de la api (entrypoint y endpoints para polideportivos y otro para piscinas)
     public static final String ENTRY_POINT= "https://datos.madrid.es/egob/";
     public static final String END_POINT_SPORTS= "catalogo/200186-0-polideportivos.json";
