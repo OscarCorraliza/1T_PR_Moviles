@@ -13,24 +13,24 @@ import com.example.practicamoviles_1tr.models.MapPoint;
 import java.util.List;
 
 
-public class PoolsAdapter extends BaseAdapter {
+public class MapPointAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<MapPoint> listPools;
+    private List<MapPoint> mapPoints;
 
-    public PoolsAdapter(Context mContext, List<MapPoint> listPools) {
+    public MapPointAdapter(Context mContext, List<MapPoint> listPools) {
         this.mContext = mContext;
-        this.listPools = listPools;
+        this.mapPoints = listPools;
     }
 
     @Override
     public int getCount() {
-        return listPools.size();
+        return mapPoints.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return listPools.get(position);
+        return mapPoints.get(position);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class PoolsAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.list_pools, null);
         }
         TextView textView=convertView.findViewById(R.id.txtPools);
-        textView.setText(listPools.get(position).getTitle());
+        textView.setText(mapPoints.get(position).getTitle());
 
         return convertView;
     }

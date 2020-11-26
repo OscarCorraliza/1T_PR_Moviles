@@ -1,6 +1,7 @@
-package com.example.practicamoviles_1tr.fragments;
+ package com.example.practicamoviles_1tr.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,10 @@ import androidx.fragment.app.Fragment;
 import com.example.practicamoviles_1tr.R;
 import com.example.practicamoviles_1tr.api_manager.IfaceApi;
 import com.example.practicamoviles_1tr.api_manager.JsonResponse;
-import com.example.practicamoviles_1tr.common.PoolsAdapter;
+import com.example.practicamoviles_1tr.common.MapPointAdapter;
 import com.example.practicamoviles_1tr.models.MapPoint;
 
+import java.io.Serializable;
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,11 +26,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
 
-public class PoolsFragment extends Fragment {
+public class PoolsFragment extends Fragment implements Serializable {
 
-    private List<MapPoint> listPools;
+    private List<MapPoint> mapPoints;
+    private MapPoint mapPoint;
     private ListView listView =null;
-    PoolsAdapter adapter = null;
+    MapPointAdapter adapter = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,24 +50,24 @@ public class PoolsFragment extends Fragment {
         IfaceApi ifaceApi = retrofit.create(IfaceApi.class);
 
         ifaceApi.getPools().enqueue(new Callback<JsonResponse>() {
+
             @Override
             public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
                 if(response!=null && response.body() != null){
-                    listPools = response.body().results;
+                    mapPoints = response.body().results;
 
-                    System.out.println("lista-------------");
-                    for(MapPoint m:listPools){
+                    for(MapPoint m:mapPoints){
                         System.out.println(m.getTitle());
                     }
-                    adapter=new PoolsAdapter(getContext(), listPools);
-                    listView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
+                    adapter=new MapPointAdapter(getContext(), mapPoints);
+                    //listView.setAdapter(adapter);
+                    //adapter.notifyDataSetChanged();
                 }
             }
 
             @Override
-            public void onFailure(Call<JsonResponse> call, Throwable t) {
-                System.out.println("NO entra bien");
+            public void onFailure(Call <JsonResponse>  call, Throwable t) {
+                Log.d("Fallo", "Entra por el fallo");
             }
         });
     }

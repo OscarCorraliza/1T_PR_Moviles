@@ -9,12 +9,10 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 
-public class MapPoint implements Serializable {
+public class MapPoint implements Parcelable {
     @SerializedName("title")
-    @Expose
     private String title;
     @SerializedName("location")
-    @Expose
     private Location location;
 
     public MapPoint(String title, Location location) {
@@ -26,6 +24,18 @@ public class MapPoint implements Serializable {
     protected MapPoint(Parcel in) {
         title = in.readString();
     }
+
+    public static final Creator<MapPoint> CREATOR = new Creator<MapPoint>() {
+        @Override
+        public MapPoint createFromParcel(Parcel in) {
+            return new MapPoint(in);
+        }
+
+        @Override
+        public MapPoint[] newArray(int size) {
+            return new MapPoint[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -41,5 +51,16 @@ public class MapPoint implements Serializable {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeParcelable(location, flags);
     }
 }
