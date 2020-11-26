@@ -11,8 +11,10 @@ import java.io.Serializable;
 
 public class MapPoint implements Parcelable {
     @SerializedName("title")
+    @Expose
     private String title;
     @SerializedName("location")
+    @Expose
     private Location location;
 
     public MapPoint(String title, Location location) {

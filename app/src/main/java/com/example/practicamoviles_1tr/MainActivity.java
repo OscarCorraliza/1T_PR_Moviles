@@ -5,19 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.example.practicamoviles_1tr.common.SplashActivity;
 import com.example.practicamoviles_1tr.fragments.CurrentLocation;
 import com.example.practicamoviles_1tr.fragments.HomeFragment;
-import com.example.practicamoviles_1tr.fragments.PoolsFragment;
+import com.example.practicamoviles_1tr.fragments.MapPointFragment;
 import com.example.practicamoviles_1tr.services.RunGPS;
 import com.google.android.material.navigation.NavigationView;
 
@@ -27,7 +22,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -188,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 break;
             case 3:
-                fragment = new PoolsFragment();
+                fragment = new MapPointFragment();
                 fragment.setArguments(bundle);
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;

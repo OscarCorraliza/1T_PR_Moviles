@@ -10,8 +10,10 @@ import java.io.Serializable;
 
 public class Location implements Parcelable {
     @SerializedName("latitude")
+    @Expose
     private int latitude;
     @SerializedName("longitude")
+    @Expose
     private int longitude;
 
     public Location(int latitude, int longitude) {

@@ -26,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
 
-public class PoolsFragment extends Fragment implements Serializable {
+public class MapPointFragment extends Fragment implements Serializable {
 
     private List<MapPoint> mapPoints;
     private MapPoint mapPoint;
@@ -36,12 +36,12 @@ public class PoolsFragment extends Fragment implements Serializable {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pools, container, false);
-        getAllPools();
+        getMapPoints();
 
         return view;
     }
 
-    public void getAllPools(){
+    public void getMapPoints(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ENTRY_POINT)
                 .addConverterFactory(GsonConverterFactory.create())
