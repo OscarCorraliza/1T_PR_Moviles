@@ -18,9 +18,9 @@ public class MapPointAdapter extends BaseAdapter {
     private Context mContext;
     private List<MapPoint> mapPoints;
 
-    public MapPointAdapter(Context mContext, List<MapPoint> listPools) {
+    public MapPointAdapter(Context mContext, List<MapPoint> mapPoints) {
         this.mContext = mContext;
-        this.mapPoints = listPools;
+        this.mapPoints = mapPoints;
     }
 
     @Override

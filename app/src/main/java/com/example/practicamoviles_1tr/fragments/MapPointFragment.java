@@ -38,9 +38,6 @@ public class MapPointFragment extends Fragment implements Serializable {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mappoints, container, false);
 
-
-
-
         return view;
     }
 
@@ -56,11 +53,9 @@ public class MapPointFragment extends Fragment implements Serializable {
                 .baseUrl(ENTRY_POINT)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        Log.d("fallo1", "pasa por aqui");
 
         IfaceApi ifaceApi = retrofit.create(IfaceApi.class);
 
-        Log.d("fallo2", "pasa por aqui");
         ifaceApi.getPools().enqueue(new Callback<JsonResponse>() {
 
             @Override
