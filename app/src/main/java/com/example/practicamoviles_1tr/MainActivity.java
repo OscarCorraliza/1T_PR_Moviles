@@ -182,6 +182,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 break;
             case 3:
+                bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
+                bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
                 fragment = new MapPointFragment();
                 fragment.setArguments(bundle);
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();

@@ -9,22 +9,20 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class Location implements Parcelable {
-    @SerializedName("latitude")
-    @Expose
-    private int latitude;
-    @SerializedName("longitude")
-    @Expose
-    private int longitude;
 
-    public Location(int latitude, int longitude) {
+    private double latitude;
+
+    private double longitude;
+
+    public Location(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
     public Location(){}
 
     protected Location(Parcel in) {
-        latitude = in.readInt();
-        longitude = in.readInt();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
     }
 
     public static final Creator<Location> CREATOR = new Creator<Location>() {
@@ -39,7 +37,7 @@ public class Location implements Parcelable {
         }
     };
 
-    public int getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
@@ -47,7 +45,7 @@ public class Location implements Parcelable {
         this.latitude = latitude;
     }
 
-    public int getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
@@ -62,7 +60,7 @@ public class Location implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(latitude);
-        dest.writeInt(longitude);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
     }
 }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.practicamoviles_1tr.R;
@@ -29,16 +30,25 @@ import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
 public class MapPointFragment extends Fragment implements Serializable {
 
     private List<MapPoint> mapPoints;
-    private MapPoint mapPoint;
-    private ListView listView =null;
+    private ListView listView;
     MapPointAdapter adapter = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pools, container, false);
-        getMapPoints();
+        View view = inflater.inflate(R.layout.fragment_mappoints, container, false);
+
+
+
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        listView = (ListView)getActivity().findViewById(R.id.lvMapPoints);
+        getMapPoints();
     }
 
     public void getMapPoints(){
@@ -46,9 +56,11 @@ public class MapPointFragment extends Fragment implements Serializable {
                 .baseUrl(ENTRY_POINT)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+        Log.d("fallo1", "pasa por aqui");
 
         IfaceApi ifaceApi = retrofit.create(IfaceApi.class);
 
+        Log.d("fallo2", "pasa por aqui");
         ifaceApi.getPools().enqueue(new Callback<JsonResponse>() {
 
             @Override
@@ -60,14 +72,15 @@ public class MapPointFragment extends Fragment implements Serializable {
                         System.out.println(m.getTitle());
                     }
                     adapter=new MapPointAdapter(getContext(), mapPoints);
-                    //listView.setAdapter(adapter);
-                    //adapter.notifyDataSetChanged();
+                    listView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onFailure(Call <JsonResponse>  call, Throwable t) {
                 Log.d("Fallo", "Entra por el fallo");
+                t.printStackTrace();
             }
         });
     }

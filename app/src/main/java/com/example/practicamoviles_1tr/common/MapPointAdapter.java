@@ -42,7 +42,7 @@ public class MapPointAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView==null){
             LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.list_pools, null);
+            convertView = layoutInflater.inflate(R.layout.list_mappoints, null);
         }
         TextView textView=convertView.findViewById(R.id.txtPools);
         textView.setText(mapPoints.get(position).getTitle());
