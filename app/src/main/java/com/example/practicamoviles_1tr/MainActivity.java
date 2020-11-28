@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.practicamoviles_1tr.fragments.CurrentLocation;
+import com.example.practicamoviles_1tr.fragments.GymFragment;
 import com.example.practicamoviles_1tr.fragments.HomeFragment;
 import com.example.practicamoviles_1tr.fragments.MapPointFragment;
 import com.example.practicamoviles_1tr.services.RunGPS;
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.guardarubicacion:
                 break;
             case R.id.instalacionesdeportivas:
+                setFragment(2);
                 break;
             case R.id.piscinas:
                 setFragment(3);
@@ -179,7 +182,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             //2 para el fragment de instalaciones deportivas(mapa)
             case 2:
-
+                Log.d("tag", "entra");
+                bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
+                bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
+                fragment = new GymFragment();
+                fragment.setArguments(bundle);
+                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;
             case 3:
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
