@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.example.practicamoviles_1tr.fragments.CurrentLocation;
 import com.example.practicamoviles_1tr.fragments.GymFragment;
 import com.example.practicamoviles_1tr.fragments.HomeFragment;
-import com.example.practicamoviles_1tr.fragments.MapPointFragment;
+import com.example.practicamoviles_1tr.fragments.PoolsFragment;
 import com.example.practicamoviles_1tr.services.RunGPS;
 import com.google.android.material.navigation.NavigationView;
 
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case 3:
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
-                fragment = new MapPointFragment();
+                fragment = new PoolsFragment();
                 fragment.setArguments(bundle);
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;

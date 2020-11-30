@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
 
-public class MapPointFragment extends Fragment implements Serializable {
+public class PoolsFragment extends Fragment implements Serializable {
 
     private List<MapPoint> mapPoints;
     private ListView listView;
