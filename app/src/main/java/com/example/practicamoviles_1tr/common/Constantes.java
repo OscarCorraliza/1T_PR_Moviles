@@ -11,4 +11,9 @@ public class Constantes {
     public static final String END_POINT_POOLS= "catalogo/210227-0-piscinas-publicas.json";
     //duracion de la pantalla de carga
     public static final int SPLASH_DURATION = 2000;
+
+    //constante para clave de sharedpreferences
+    public static final String CLAVE_PREFERENCES = "favoritos";
+    //constante para array de sharedpreferences
+    public static final String CLAVE_PREFERENCES_ARRAY = "favoritosArray";
 }

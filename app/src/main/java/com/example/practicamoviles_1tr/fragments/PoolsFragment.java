@@ -45,10 +45,10 @@ public class PoolsFragment extends Fragment implements Serializable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listView = (ListView)getActivity().findViewById(R.id.lvMapPoints);
-        getMapPoints();
+        getPools();
     }
 
-    public void getMapPoints(){
+    public void getPools(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ENTRY_POINT)
                 .addConverterFactory(GsonConverterFactory.create())

@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Double latitude=0.0;
     Double longitude=0.0;
     private Fragment fragment;
-
     public static final String TITLE_KEY = "TITLE_KEY";
     public static final String TITLE = "My location";
     public static final String DESCRIPTION_KEY = "DESCRIPTION_KEY";
