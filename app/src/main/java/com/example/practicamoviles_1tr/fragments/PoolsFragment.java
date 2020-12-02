@@ -1,10 +1,13 @@
  package com.example.practicamoviles_1tr.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -29,6 +32,7 @@ import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
 
 public class PoolsFragment extends Fragment implements Serializable {
 
+    private ImageView imgFav;
     private List<MapPoint> mapPoints;
     private ListView listView;
     MapPointAdapter adapter = null;
@@ -46,6 +50,17 @@ public class PoolsFragment extends Fragment implements Serializable {
         super.onActivityCreated(savedInstanceState);
         listView = (ListView)getActivity().findViewById(R.id.lvMapPoints);
         getPools();
+        imgFav = (ImageView) getActivity().findViewById(R.id.favIcon);
+        imgFav.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+
+                return false;
+            }
+        });
+
     }
 
     public void getPools(){

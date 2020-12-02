@@ -34,40 +34,7 @@ public class FavouritesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_favourites, container, false);
     }
 
-    public ArrayList<MapPoint> getFavs(){
-        SharedPreferences preferences = getActivity().getSharedPreferences(CLAVE_PREFERENCES, MODE_PRIVATE);
-        String json = preferences.getString(CLAVE_PREFERENCES_ARRAY, null);
 
-        ArrayList<MapPoint> mapPoints = new ArrayList<>();
-        //inicializamos el parser y le metemos el string del json
-        JsonParser parser = new JsonParser();
-        JsonArray arrayGson = parser.parse(json).getAsJsonArray();
-        //recorremos el array en el json
-        for (JsonElement obj:arrayGson){
-            JsonObject gsonMapPoint = obj.getAsJsonObject();
 
-            String title = gsonMapPoint.get("title").getAsString();
-            JsonObject gsonLocation = gsonMapPoint.get("location").getAsJsonObject();
 
-            double latitude = gsonLocation.get("latitude").getAsDouble();
-            double longitude = gsonLocation.get("longitude").getAsDouble();
-
-            Location location = new Location(latitude, longitude);
-            MapPoint mapPoint = new MapPoint(title, location);
-            mapPoints.add(mapPoint);
-        }
-        return mapPoints;
-    }
-
-    public void setFav(MapPoint newFav){
-        ArrayList<MapPoint> favs = getFavs();
-        favs.add(newFav);
-        Gson gson = new Gson();
-        String arrGson = gson.toJson(favs);
-
-        SharedPreferences preferences = getActivity().getSharedPreferences(CLAVE_PREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);
-        editor.apply();
-    }
 }
