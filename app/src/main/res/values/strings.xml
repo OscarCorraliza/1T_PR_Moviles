@@ -14,8 +14,7 @@
 
     <string name="gps_ok">Permiso de GPS concedido</string>
     <string name="gps_no_ok">Permiso de GPS denegado</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="guardar_ubicacion">Guardar ubicación</string>
     <string name="instalaciones_deportivas">Instalaciones deportivas</string>
     <string name="piscinas">Piscinas</string>

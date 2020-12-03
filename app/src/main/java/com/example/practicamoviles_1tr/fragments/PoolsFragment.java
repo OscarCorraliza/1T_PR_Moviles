@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.practicamoviles_1tr.R;
 import com.example.practicamoviles_1tr.api_manager.IfaceApi;
 import com.example.practicamoviles_1tr.api_manager.JsonResponse;
+import com.example.practicamoviles_1tr.common.FavsSettings;
 import com.example.practicamoviles_1tr.common.MapPointAdapter;
 import com.example.practicamoviles_1tr.models.MapPoint;
 
@@ -35,7 +37,9 @@ public class PoolsFragment extends Fragment implements Serializable {
     private ImageView imgFav;
     private List<MapPoint> mapPoints;
     private ListView listView;
-    MapPointAdapter adapter = null;
+    private MapPointAdapter adapter = null;
+    private FavsSettings favsSettings;
+    private MapPoint mapPoint;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,19 +52,19 @@ public class PoolsFragment extends Fragment implements Serializable {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listView = (ListView)getActivity().findViewById(R.id.lvMapPoints);
+        listView = (ListView) getActivity().findViewById(R.id.lvMapPoints);
         getPools();
-        imgFav = (ImageView) getActivity().findViewById(R.id.favIcon);
-        imgFav.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
+        favsSettings = new FavsSettings(getActivity());
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                mapPoint = mapPoints.get(position);
+                favsSettings.setFav(mapPoint);
+                System.out.println(mapPoint.getTitle());
                 return false;
             }
         });
-
     }
 
     public void getPools(){

@@ -9,6 +9,7 @@
             android:id="@+id/lvMapPoints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:dividerHeight="1dp"/>
+            android:clickable="true"
+            android:dividerHeight="5dp" />
 
 </FrameLayout>

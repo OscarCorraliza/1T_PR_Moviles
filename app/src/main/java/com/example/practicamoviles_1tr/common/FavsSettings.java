@@ -2,6 +2,7 @@ package com.example.practicamoviles_1tr.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.example.practicamoviles_1tr.models.Location;
 import com.example.practicamoviles_1tr.models.MapPoint;
@@ -10,10 +11,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.widget.Toast.LENGTH_SHORT;
 import static com.example.practicamoviles_1tr.common.Constantes.CLAVE_PREFERENCES;
 import static com.example.practicamoviles_1tr.common.Constantes.CLAVE_PREFERENCES_ARRAY;
 
@@ -27,39 +32,83 @@ public class FavsSettings {
     public ArrayList<MapPoint> getFavs(){
         SharedPreferences preferences = context.getSharedPreferences(CLAVE_PREFERENCES, MODE_PRIVATE);
         String json = preferences.getString(CLAVE_PREFERENCES_ARRAY, null);
-
-        ArrayList<MapPoint> mapPoints = new ArrayList<>();
-        //inicializamos el parser y le metemos el string del json
+        ArrayList<MapPoint> mapPoints=new ArrayList<>();
         JsonParser parser = new JsonParser();
-        JsonArray arrayGson = parser.parse(json).getAsJsonArray();
-        //recorremos el array en el json
-        for (JsonElement obj:arrayGson){
-            JsonObject gsonMapPoint = obj.getAsJsonObject();
 
-            String title = gsonMapPoint.get("title").getAsString();
-            JsonObject gsonLocation = gsonMapPoint.get("location").getAsJsonObject();
+        //comprobar si el json es un array o un objeto solo
+        if(parser.parse(json).isJsonArray()){
+            //inicializamos el parser y le metemos el string del json
+            JsonArray arrayGson = parser.parse(json).getAsJsonArray();
+            //recorremos el array en el json
+            for (JsonElement obj:arrayGson){
+                JsonObject gsonMapPoint = obj.getAsJsonObject();
 
-            double latitude = gsonLocation.get("latitude").getAsDouble();
-            double longitude = gsonLocation.get("longitude").getAsDouble();
+                JsonObject gsonLocation = gsonMapPoint.get("location").getAsJsonObject();
 
+                double latitude = gsonLocation.get("latitude").getAsDouble();
+                double longitude = gsonLocation.get("longitude").getAsDouble();
+
+                String title = gsonMapPoint.get("title").getAsString();
+                Location location = new Location(latitude, longitude);
+                MapPoint mapPoint = new MapPoint(title, location);
+                mapPoints.add(mapPoint);
+            }
+        }else{
+            JsonObject objJson = parser.parse(json).getAsJsonObject();
+            JsonObject locationJson = objJson.get("location").getAsJsonObject();
+            double latitude = locationJson.get("latitude").getAsDouble();
+            double longitude = locationJson.get("longitude").getAsDouble();
+
+            String title = objJson.get("title").getAsString();
             Location location = new Location(latitude, longitude);
             MapPoint mapPoint = new MapPoint(title, location);
+
             mapPoints.add(mapPoint);
         }
+
         for(MapPoint mp:mapPoints){
             System.out.println(mp.getTitle());
         }
         return mapPoints;
     }
     public void setFav(MapPoint newFav){
-        ArrayList<MapPoint> favs = getFavs();
-        favs.add(newFav);
-        Gson gson = new Gson();
-        String arrGson = gson.toJson(favs);
-
         SharedPreferences preferences = context.getSharedPreferences(CLAVE_PREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);
-        editor.apply();
+        String json = preferences.getString(CLAVE_PREFERENCES_ARRAY, null);
+
+        ArrayList<MapPoint> favs = null;
+        String arrGson = null;
+        Gson gson = new Gson();
+        System.out.println(json);
+        if(json!=null){
+            boolean repeat=false;
+            favs = getFavs();
+
+            for(MapPoint mp:favs){
+                if(mp.getTitle().equalsIgnoreCase(newFav.getTitle())){
+                    repeat=true;
+                }
+            }
+            if(!repeat){
+                favs.add(newFav);
+                arrGson = gson.toJson(favs);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);
+                editor.apply();
+                Toast toastRepeat = Toast.makeText(context, "Añadido a favoritos", LENGTH_SHORT);
+                toastRepeat.show();
+            }else{
+                Toast toastRepeat = Toast.makeText(context, "Ya está en favoritos", LENGTH_SHORT);
+                toastRepeat.show();
+            }
+
+        }else{
+            arrGson = gson.toJson(newFav);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);
+            editor.apply();
+            Toast toastRepeat = Toast.makeText(context, "Añadido a favoritos", LENGTH_SHORT);
+            toastRepeat.show();
+        }
+
     }
 }
