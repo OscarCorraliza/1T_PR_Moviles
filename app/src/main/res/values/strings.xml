@@ -21,4 +21,9 @@
     <string name="favoritos">Favoritos</string>
     <string name="paginas_de_interes">Páginas de interés</string>
 
+    <string name="textoHomeFragmentActivo">Esta es la última ubicación guardada: </string>
+    <string name="textoHomeFragmentDesactivado">No tienes ninguna ubicación guardada.</string>
+
+
+
 </resources>

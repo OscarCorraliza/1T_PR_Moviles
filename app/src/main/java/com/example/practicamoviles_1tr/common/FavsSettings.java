@@ -50,7 +50,7 @@ public class FavsSettings {
 
                 String title = gsonMapPoint.get("title").getAsString();
                 Location location = new Location(latitude, longitude);
-                MapPoint mapPoint = new MapPoint(title, location);
+                MapPoint mapPoint = new MapPoint(title, location, true);
                 mapPoints.add(mapPoint);
             }
         }else{
@@ -61,7 +61,7 @@ public class FavsSettings {
 
             String title = objJson.get("title").getAsString();
             Location location = new Location(latitude, longitude);
-            MapPoint mapPoint = new MapPoint(title, location);
+            MapPoint mapPoint = new MapPoint(title, location, true);
 
             mapPoints.add(mapPoint);
         }

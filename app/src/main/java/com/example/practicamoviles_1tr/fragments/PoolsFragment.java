@@ -37,6 +37,7 @@ public class PoolsFragment extends Fragment implements Serializable {
 
     private ImageView imgFav;
     private List<MapPoint> mapPoints;
+    private List<MapPoint> mapPointsFavs;
     private ListView listView;
     private MapPointAdapter adapter = null;
     private FavsSettings favsSettings;
@@ -88,10 +89,17 @@ public class PoolsFragment extends Fragment implements Serializable {
             public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
                 if(response!=null && response.body() != null){
                     mapPoints = response.body().results;
+                    mapPointsFavs = new FavsSettings(getActivity()).getFavs();
 
-                    for(MapPoint m:mapPoints){
-                        System.out.println(m.getTitle());
+                    //bucle para recuperar todos los mappoints con los favoritos que ya haya(para tener el atributo isFav)
+                    for (MapPoint mp:mapPoints){
+                        for (MapPoint fav:mapPointsFavs){
+                            if(mp.getTitle().equalsIgnoreCase(fav.getTitle())){
+                                mp=fav;
+                            }
+                        }
                     }
+
                     adapter=new MapPointAdapter(getContext(), mapPoints);
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
@@ -99,10 +107,7 @@ public class PoolsFragment extends Fragment implements Serializable {
             }
 
             @Override
-            public void onFailure(Call <JsonResponse>  call, Throwable t) {
-                Log.d("Fallo", "Entra por el fallo");
-                t.printStackTrace();
-            }
+            public void onFailure(Call <JsonResponse>  call, Throwable t) {}
         });
     }
 }

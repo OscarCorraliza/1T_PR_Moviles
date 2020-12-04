@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.practicamoviles_1tr.R;
+import com.example.practicamoviles_1tr.common.FavsSettings;
+import com.example.practicamoviles_1tr.common.MapPointAdapter;
 import com.example.practicamoviles_1tr.models.Location;
 import com.example.practicamoviles_1tr.models.MapPoint;
 import com.google.gson.Gson;
@@ -27,6 +31,8 @@ import static com.example.practicamoviles_1tr.common.Constantes.CLAVE_PREFERENCE
 public class FavouritesFragment extends Fragment {
 
     private ArrayList<MapPoint> favsList;
+    private ListView lvFavs;
+    private MapPointAdapter adapter = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,7 +40,13 @@ public class FavouritesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_favourites, container, false);
     }
 
-
-
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        lvFavs = (ListView) getActivity().findViewById(R.id.lvFavs);
+        favsList = new FavsSettings(getActivity()).getFavs();
+        adapter=new MapPointAdapter(getContext(), favsList);
+        lvFavs.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
 }

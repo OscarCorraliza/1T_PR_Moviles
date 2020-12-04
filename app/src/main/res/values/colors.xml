@@ -3,5 +3,6 @@
     <color name="colorPrimary">#85C1E9</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="colorListView"> #d6eaf8 </color>
+    <color name="colorFragment"> #ebf5fb  </color>
+
 </resources>

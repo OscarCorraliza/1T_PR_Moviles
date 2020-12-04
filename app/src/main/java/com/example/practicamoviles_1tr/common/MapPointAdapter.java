@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.DrawableRes;
 
 import com.example.practicamoviles_1tr.R;
 import com.example.practicamoviles_1tr.models.MapPoint;
@@ -46,6 +49,10 @@ public class MapPointAdapter extends BaseAdapter {
         }
         TextView textView=convertView.findViewById(R.id.txtPools);
         textView.setText(mapPoints.get(position).getTitle());
+        ImageView imagen = convertView.findViewById(R.id.favIcon);
+        if(mapPoints.get(position).isFav()){
+            imagen.setImageResource(R.drawable.ic_star_on);
+        }
 
         return convertView;
     }

@@ -33,8 +33,7 @@ public class GymFragment extends Fragment implements Serializable {
     private List<MapPoint> mapPoints;
     private ListView listView;
     MapPointAdapter adapter = null;
-
-    private double longitude , latitude;
+    private double longitude, latitude;
 
     public GymFragment(double longitude, double latitude) {
         this.longitude = longitude;

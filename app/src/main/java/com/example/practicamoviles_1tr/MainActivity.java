@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.practicamoviles_1tr.fragments.CurrentLocation;
+import com.example.practicamoviles_1tr.fragments.FavouritesFragment;
 import com.example.practicamoviles_1tr.fragments.GymFragment;
 import com.example.practicamoviles_1tr.fragments.HomeFragment;
 import com.example.practicamoviles_1tr.fragments.PoolsFragment;
@@ -53,16 +54,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         navView = findViewById(R.id.nav_view);
 
-        //añadimos la toolbar
         setToolbar();
-        //llamamos al metodo de mas abajo que inicia el servicio del gps(sin funcion todavia)
+        //llamamos al metodo de mas abajo que inicia el servicio del gps
         getGPS();
         //hay que establecer el fragment de inicio
         setFragment(0);
@@ -113,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.piscinas:
                 setFragment(3);
+                break;
+            case R.id.favoritos:
+                setFragment(4);
                 break;
         }
         return false;
@@ -189,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragment.setArguments(bundle);
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;
+                //3 para mostrar las piscinas
             case 3:
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
@@ -196,6 +198,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragment.setArguments(bundle);
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;
+            //4 para mostrar los favoritos
+            case 4:
+                fragment = new FavouritesFragment();
+                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+
         }
     }
 
