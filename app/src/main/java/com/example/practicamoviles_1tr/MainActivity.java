@@ -185,14 +185,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d("tag", "entra");
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
-                fragment = new GymFragment();
+                fragment = new GymFragment(longitude, latitude);
                 fragment.setArguments(bundle);
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;
             case 3:
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
-                fragment = new PoolsFragment();
+                fragment = new PoolsFragment(longitude, latitude);
                 fragment.setArguments(bundle);
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;

@@ -30,6 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.practicamoviles_1tr.common.Constantes.DISTANCE;
 import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
 
 public class PoolsFragment extends Fragment implements Serializable {
@@ -40,6 +41,12 @@ public class PoolsFragment extends Fragment implements Serializable {
     private MapPointAdapter adapter = null;
     private FavsSettings favsSettings;
     private MapPoint mapPoint;
+    private double longitude, latitude;
+
+    public PoolsFragment(double longitude, double latitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,7 +82,7 @@ public class PoolsFragment extends Fragment implements Serializable {
 
         IfaceApi ifaceApi = retrofit.create(IfaceApi.class);
 
-        ifaceApi.getPools().enqueue(new Callback<JsonResponse>() {
+        ifaceApi.getPools(latitude, longitude, DISTANCE).enqueue(new Callback<JsonResponse>() {
 
             @Override
             public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
