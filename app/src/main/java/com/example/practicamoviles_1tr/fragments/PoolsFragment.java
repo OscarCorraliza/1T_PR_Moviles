@@ -75,7 +75,7 @@ public class PoolsFragment extends Fragment implements Serializable {
 
         IfaceApi ifaceApi = retrofit.create(IfaceApi.class);
 
-        ifaceApi.getPools().enqueue(new Callback<JsonResponse>() {
+        ifaceApi.getPools(40.47876758357458, -3.7086993281311904, 8000).enqueue(new Callback<JsonResponse>() {
 
             @Override
             public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
