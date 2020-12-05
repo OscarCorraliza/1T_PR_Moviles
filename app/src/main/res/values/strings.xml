@@ -24,6 +24,9 @@
     <string name="textoHomeFragmentActivo">Esta es la última ubicación guardada: </string>
     <string name="textoHomeFragmentDesactivado">No tienes ninguna ubicación guardada.</string>
 
-
+    <string name="tituloAlert">Eliminar favorito</string>
+    <string name="mensajeAlert">¿Quiere eliminar este favorito?</string>
+    <string name="optSiAlert">Eliminar</string>
+    <string name="optNoAlert">No</string>
 
 </resources>

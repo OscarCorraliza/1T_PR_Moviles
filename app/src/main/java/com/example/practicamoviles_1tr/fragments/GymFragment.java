@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.practicamoviles_1tr.R;
 import com.example.practicamoviles_1tr.api_manager.IfaceApi;
 import com.example.practicamoviles_1tr.api_manager.JsonResponse;
+import com.example.practicamoviles_1tr.common.FavsSettings;
 import com.example.practicamoviles_1tr.common.MapPointAdapter;
 import com.example.practicamoviles_1tr.models.MapPoint;
 
@@ -31,8 +34,11 @@ import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
 public class GymFragment extends Fragment implements Serializable {
 
     private List<MapPoint> mapPoints;
+    private List<MapPoint> mapPointsFavs;
     private ListView listView;
     MapPointAdapter adapter = null;
+    private FavsSettings favsSettings;
+    private MapPoint mapPoint;
     private double longitude, latitude;
 
     public GymFragment(double longitude, double latitude) {
@@ -53,6 +59,18 @@ public class GymFragment extends Fragment implements Serializable {
         super.onActivityCreated(savedInstanceState);
         listView = (ListView)getActivity().findViewById(R.id.lvMapPoints);
         getGyms();
+        favsSettings = new FavsSettings(getActivity());
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                mapPoint = mapPoints.get(position);
+                favsSettings.setFav(mapPoint);
+                ImageView favImg = (ImageView) view.findViewById(R.id.favIcon);
+                favImg.setImageResource(R.drawable.ic_star_on);
+                return false;
+            }
+        });
     }
 
     public void getGyms(){
@@ -69,9 +87,14 @@ public class GymFragment extends Fragment implements Serializable {
             public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
                 if(response!=null && response.body() != null){
                     mapPoints = response.body().results;
-
-                    for(MapPoint m:mapPoints){
-                        System.out.println(m.getTitle());
+                    mapPointsFavs = new FavsSettings(getActivity()).getFavs();
+                    //bucle para recuperar todos los mappoints con los favoritos que ya haya(para tener el atributo isFav)
+                    for (int i=0; i<mapPoints.size();i++){
+                        for (MapPoint fav:mapPointsFavs){
+                            if(mapPoints.get(i).getTitle().equalsIgnoreCase(fav.getTitle())){
+                                mapPoints.set(i, fav);
+                            }
+                        }
                     }
                     adapter=new MapPointAdapter(getContext(), mapPoints);
                     listView.setAdapter(adapter);
@@ -80,10 +103,7 @@ public class GymFragment extends Fragment implements Serializable {
             }
 
             @Override
-            public void onFailure(Call <JsonResponse>  call, Throwable t) {
-                Log.d("Fallo", "Entra por el fallo");
-                t.printStackTrace();
-            }
+            public void onFailure(Call <JsonResponse>  call, Throwable t) {}
         });
     }
 

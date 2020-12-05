@@ -69,7 +69,8 @@ public class PoolsFragment extends Fragment implements Serializable {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 mapPoint = mapPoints.get(position);
                 favsSettings.setFav(mapPoint);
-                System.out.println(mapPoint.getTitle());
+                ImageView favImg = (ImageView) view.findViewById(R.id.favIcon);
+                favImg.setImageResource(R.drawable.ic_star_on);
                 return false;
             }
         });
@@ -92,10 +93,10 @@ public class PoolsFragment extends Fragment implements Serializable {
                     mapPointsFavs = new FavsSettings(getActivity()).getFavs();
 
                     //bucle para recuperar todos los mappoints con los favoritos que ya haya(para tener el atributo isFav)
-                    for (MapPoint mp:mapPoints){
+                    for (int i=0; i<mapPoints.size();i++){
                         for (MapPoint fav:mapPointsFavs){
-                            if(mp.getTitle().equalsIgnoreCase(fav.getTitle())){
-                                mp=fav;
+                            if(mapPoints.get(i).getTitle().equalsIgnoreCase(fav.getTitle())){
+                               mapPoints.set(i, fav);
                             }
                         }
                     }

@@ -65,10 +65,6 @@ public class FavsSettings {
 
             mapPoints.add(mapPoint);
         }
-
-        for(MapPoint mp:mapPoints){
-            System.out.println(mp.getTitle());
-        }
         return mapPoints;
     }
     public void setFav(MapPoint newFav){
@@ -78,7 +74,6 @@ public class FavsSettings {
         ArrayList<MapPoint> favs = null;
         String arrGson = null;
         Gson gson = new Gson();
-        System.out.println(json);
         if(json!=null){
             boolean repeat=false;
             favs = getFavs();
@@ -109,6 +104,18 @@ public class FavsSettings {
             Toast toastRepeat = Toast.makeText(context, "Añadido a favoritos", LENGTH_SHORT);
             toastRepeat.show();
         }
+    }
 
+    public void removeFav(int position){
+        Gson gson = new Gson();
+
+        ArrayList<MapPoint> favs = getFavs();
+        favs.remove(position);
+        String arrGson = gson.toJson(favs);
+
+        SharedPreferences preferences = context.getSharedPreferences(CLAVE_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);
+        editor.apply();
     }
 }

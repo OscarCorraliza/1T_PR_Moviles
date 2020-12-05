@@ -1,11 +1,11 @@
 package com.example.practicamoviles_1tr.fragments;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -14,29 +14,20 @@ import androidx.fragment.app.Fragment;
 import com.example.practicamoviles_1tr.R;
 import com.example.practicamoviles_1tr.common.FavsSettings;
 import com.example.practicamoviles_1tr.common.MapPointAdapter;
-import com.example.practicamoviles_1tr.models.Location;
 import com.example.practicamoviles_1tr.models.MapPoint;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
-import static android.content.Context.MODE_PRIVATE;
-import static com.example.practicamoviles_1tr.common.Constantes.CLAVE_PREFERENCES;
-import static com.example.practicamoviles_1tr.common.Constantes.CLAVE_PREFERENCES_ARRAY;
-
-public class FavouritesFragment extends Fragment {
+public class FavouritesFragment extends Fragment  {
 
     private ArrayList<MapPoint> favsList;
     private ListView lvFavs;
     private MapPointAdapter adapter = null;
+    private int id;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         return inflater.inflate(R.layout.fragment_favourites, container, false);
     }
 
@@ -48,5 +39,34 @@ public class FavouritesFragment extends Fragment {
         adapter=new MapPointAdapter(getContext(), favsList);
         lvFavs.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
+        lvFavs.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showDialog(position);
+
+                //esto actualiza el listview pero al pulsar otro item (probar con timerTask)
+                favsList = new FavsSettings(getActivity()).getFavs();
+                adapter=new MapPointAdapter(getContext(), favsList);
+                lvFavs.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                return false;
+            }
+        });
+
+
+    }
+
+
+
+    public void showDialog(int position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.tituloAlert);
+        builder.setMessage(R.string.mensajeAlert);
+
+        builder.setPositiveButton(R.string.optSiAlert, (dialog, which) -> new FavsSettings(getActivity()).removeFav(position));
+        builder.setNegativeButton(R.string.optNoAlert, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

@@ -1,0 +1,369 @@
+Index: app/src/main/java/com/example/practicamoviles_1tr/fragments/PoolsFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+> package com.example.practicamoviles_1tr.fragments;\r\n\r\nimport android.annotation.SuppressLint;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.MotionEvent;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.AdapterView;\r\nimport android.widget.ImageView;\r\nimport android.widget.ListView;\r\n\r\nimport androidx.annotation.Nullable;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.example.practicamoviles_1tr.R;\r\nimport com.example.practicamoviles_1tr.api_manager.IfaceApi;\r\nimport com.example.practicamoviles_1tr.api_manager.JsonResponse;\r\nimport com.example.practicamoviles_1tr.common.FavsSettings;\r\nimport com.example.practicamoviles_1tr.common.MapPointAdapter;\r\nimport com.example.practicamoviles_1tr.models.MapPoint;\r\n\r\nimport java.io.Serializable;\r\nimport java.util.List;\r\n\r\nimport retrofit2.Call;\r\nimport retrofit2.Callback;\r\nimport retrofit2.Response;\r\nimport retrofit2.Retrofit;\r\nimport retrofit2.converter.gson.GsonConverterFactory;\r\n\r\nimport static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;\r\n\r\npublic class PoolsFragment extends Fragment implements Serializable {\r\n\r\n    private ImageView imgFav;\r\n    private List<MapPoint> mapPoints;\r\n    private ListView listView;\r\n    private MapPointAdapter adapter = null;\r\n    private FavsSettings favsSettings;\r\n    private MapPoint mapPoint;\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        View view = inflater.inflate(R.layout.fragment_mappoints, container, false);\r\n\r\n        return view;\r\n    }\r\n\r\n    @Override\r\n    public void onActivityCreated(@Nullable Bundle savedInstanceState) {\r\n        super.onActivityCreated(savedInstanceState);\r\n        listView = (ListView) getActivity().findViewById(R.id.lvMapPoints);\r\n        getPools();\r\n        favsSettings = new FavsSettings(getActivity());\r\n\r\n        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {\r\n            @Override\r\n            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {\r\n                mapPoint = mapPoints.get(position);\r\n                favsSettings.setFav(mapPoint);\r\n                System.out.println(mapPoint.getTitle());\r\n                return false;\r\n            }\r\n        });\r\n    }\r\n\r\n    public void getPools(){\r\n        Retrofit retrofit = new Retrofit.Builder()\r\n                .baseUrl(ENTRY_POINT)\r\n                .addConverterFactory(GsonConverterFactory.create())\r\n                .build();\r\n\r\n        IfaceApi ifaceApi = retrofit.create(IfaceApi.class);\r\n\r\n        ifaceApi.getPools().enqueue(new Callback<JsonResponse>() {\r\n\r\n            @Override\r\n            public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {\r\n                if(response!=null && response.body() != null){\r\n                    mapPoints = response.body().results;\r\n\r\n                    for(MapPoint m:mapPoints){\r\n                        System.out.println(m.getTitle());\r\n                    }\r\n                    adapter=new MapPointAdapter(getContext(), mapPoints);\r\n                    listView.setAdapter(adapter);\r\n                    adapter.notifyDataSetChanged();\r\n                }\r\n            }\r\n\r\n            @Override\r\n            public void onFailure(Call <JsonResponse>  call, Throwable t) {\r\n                Log.d(\"Fallo\", \"Entra por el fallo\");\r\n                t.printStackTrace();\r\n            }\r\n        });\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/practicamoviles_1tr/fragments/PoolsFragment.java	(revision e1b6117bc27b7e42b95dbfffaa141790075901ea)
++++ app/src/main/java/com/example/practicamoviles_1tr/fragments/PoolsFragment.java	(date 1607109904424)
+@@ -30,16 +30,24 @@
+ import retrofit2.Retrofit;
+ import retrofit2.converter.gson.GsonConverterFactory;
+ 
++import static com.example.practicamoviles_1tr.common.Constantes.DISTANCE;
+ import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
+ 
+ public class PoolsFragment extends Fragment implements Serializable {
+ 
+     private ImageView imgFav;
+     private List<MapPoint> mapPoints;
++    private List<MapPoint> mapPointsFavs;
+     private ListView listView;
+     private MapPointAdapter adapter = null;
+     private FavsSettings favsSettings;
+     private MapPoint mapPoint;
++    private double longitude, latitude;
++
++    public PoolsFragment(double longitude, double latitude) {
++        this.longitude = longitude;
++        this.latitude = latitude;
++    }
+ 
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+@@ -75,16 +83,23 @@
+ 
+         IfaceApi ifaceApi = retrofit.create(IfaceApi.class);
+ 
+-        ifaceApi.getPools().enqueue(new Callback<JsonResponse>() {
++        ifaceApi.getPools(latitude, longitude, DISTANCE).enqueue(new Callback<JsonResponse>() {
+ 
+             @Override
+             public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
+                 if(response!=null && response.body() != null){
+                     mapPoints = response.body().results;
++                    mapPointsFavs = new FavsSettings(getActivity()).getFavs();
+ 
+-                    for(MapPoint m:mapPoints){
+-                        System.out.println(m.getTitle());
++                    //bucle para recuperar todos los mappoints con los favoritos que ya haya(para tener el atributo isFav)
++                    for (MapPoint mp:mapPoints){
++                        for (MapPoint fav:mapPointsFavs){
++                            if(mp.getTitle().equalsIgnoreCase(fav.getTitle())){
++                                mp=fav;
++                            }
++                        }
+                     }
++
+                     adapter=new MapPointAdapter(getContext(), mapPoints);
+                     listView.setAdapter(adapter);
+                     adapter.notifyDataSetChanged();
+Index: app/src/main/java/com/example/practicamoviles_1tr/models/MapPoint.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.practicamoviles_1tr.models;\r\n\r\nimport android.os.Parcel;\r\nimport android.os.Parcelable;\r\n\r\nimport com.google.gson.annotations.Expose;\r\nimport com.google.gson.annotations.SerializedName;\r\n\r\nimport java.io.Serializable;\r\n\r\n\r\npublic class MapPoint implements Parcelable {\r\n\r\n    private String title;\r\n\r\n    private Location location;\r\n\r\n    public MapPoint(String title, Location location) {\r\n        this.title = title;\r\n        this.location = location;\r\n    }\r\n    public MapPoint(){}\r\n\r\n    protected MapPoint(Parcel in) {\r\n        title = in.readString();\r\n    }\r\n\r\n    public static final Creator<MapPoint> CREATOR = new Creator<MapPoint>() {\r\n        @Override\r\n        public MapPoint createFromParcel(Parcel in) {\r\n            return new MapPoint(in);\r\n        }\r\n\r\n        @Override\r\n        public MapPoint[] newArray(int size) {\r\n            return new MapPoint[size];\r\n        }\r\n    };\r\n\r\n    public String getTitle() {\r\n        return title;\r\n    }\r\n\r\n    public void setTitle(String title) {\r\n        this.title = title;\r\n    }\r\n\r\n    public Location getLocation() {\r\n        return location;\r\n    }\r\n\r\n    public void setLocation(Location location) {\r\n        this.location = location;\r\n    }\r\n\r\n    @Override\r\n    public int describeContents() {\r\n        return 0;\r\n    }\r\n\r\n    @Override\r\n    public void writeToParcel(Parcel dest, int flags) {\r\n        dest.writeString(title);\r\n        dest.writeParcelable(location, flags);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/practicamoviles_1tr/models/MapPoint.java	(revision e1b6117bc27b7e42b95dbfffaa141790075901ea)
++++ app/src/main/java/com/example/practicamoviles_1tr/models/MapPoint.java	(date 1607104689695)
+@@ -1,8 +1,11 @@
+ package com.example.practicamoviles_1tr.models;
+ 
++import android.os.Build;
+ import android.os.Parcel;
+ import android.os.Parcelable;
+ 
++import androidx.annotation.RequiresApi;
++
+ import com.google.gson.annotations.Expose;
+ import com.google.gson.annotations.SerializedName;
+ 
+@@ -15,10 +18,19 @@
+ 
+     private Location location;
+ 
++    //booleano para controlar si se ha guardado en favoritos
++    private boolean isFav;
++
+     public MapPoint(String title, Location location) {
+         this.title = title;
+         this.location = location;
+     }
++    public MapPoint(String title, Location location, boolean isFav) {
++        this.title = title;
++        this.location = location;
++        this.isFav=isFav;
++    }
++
+     public MapPoint(){}
+ 
+     protected MapPoint(Parcel in) {
+@@ -53,6 +65,14 @@
+         this.location = location;
+     }
+ 
++    public boolean isFav() {
++        return isFav;
++    }
++
++    public void setFav(boolean fav) {
++        isFav = fav;
++    }
++
+     @Override
+     public int describeContents() {
+         return 0;
+@@ -62,5 +82,6 @@
+     public void writeToParcel(Parcel dest, int flags) {
+         dest.writeString(title);
+         dest.writeParcelable(location, flags);
++
+     }
+ }
+Index: app/src/main/java/com/example/practicamoviles_1tr/fragments/GymFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.practicamoviles_1tr.fragments;\r\n\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.ListView;\r\n\r\nimport androidx.annotation.Nullable;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.example.practicamoviles_1tr.R;\r\nimport com.example.practicamoviles_1tr.api_manager.IfaceApi;\r\nimport com.example.practicamoviles_1tr.api_manager.JsonResponse;\r\nimport com.example.practicamoviles_1tr.common.MapPointAdapter;\r\nimport com.example.practicamoviles_1tr.models.MapPoint;\r\n\r\nimport java.io.Serializable;\r\nimport java.util.List;\r\n\r\nimport retrofit2.Call;\r\nimport retrofit2.Callback;\r\nimport retrofit2.Response;\r\nimport retrofit2.Retrofit;\r\nimport retrofit2.converter.gson.GsonConverterFactory;\r\n\r\nimport static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;\r\n\r\npublic class GymFragment extends Fragment implements Serializable {\r\n\r\n    private List<MapPoint> mapPoints;\r\n    private ListView listView;\r\n    MapPointAdapter adapter = null;\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        View view = inflater.inflate(R.layout.fragment_mappoints, container, false);\r\n\r\n        return view;\r\n    }\r\n\r\n    @Override\r\n    public void onActivityCreated(@Nullable Bundle savedInstanceState) {\r\n        super.onActivityCreated(savedInstanceState);\r\n        listView = (ListView)getActivity().findViewById(R.id.lvMapPoints);\r\n        getGyms();\r\n    }\r\n\r\n    public void getGyms(){\r\n        Retrofit retrofit = new Retrofit.Builder()\r\n                .baseUrl(ENTRY_POINT)\r\n                .addConverterFactory(GsonConverterFactory.create())\r\n                .build();\r\n\r\n        IfaceApi ifaceApi = retrofit.create(IfaceApi.class);\r\n\r\n        ifaceApi.getGyms().enqueue(new Callback<JsonResponse>() {\r\n\r\n            @Override\r\n            public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {\r\n                if(response!=null && response.body() != null){\r\n                    mapPoints = response.body().results;\r\n\r\n                    for(MapPoint m:mapPoints){\r\n                        System.out.println(m.getTitle());\r\n                    }\r\n                    adapter=new MapPointAdapter(getContext(), mapPoints);\r\n                    listView.setAdapter(adapter);\r\n                    adapter.notifyDataSetChanged();\r\n                }\r\n            }\r\n\r\n            @Override\r\n            public void onFailure(Call <JsonResponse>  call, Throwable t) {\r\n                Log.d(\"Fallo\", \"Entra por el fallo\");\r\n                t.printStackTrace();\r\n            }\r\n        });\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/practicamoviles_1tr/fragments/GymFragment.java	(revision e1b6117bc27b7e42b95dbfffaa141790075901ea)
++++ app/src/main/java/com/example/practicamoviles_1tr/fragments/GymFragment.java	(date 1607109952165)
+@@ -25,6 +25,7 @@
+ import retrofit2.Retrofit;
+ import retrofit2.converter.gson.GsonConverterFactory;
+ 
++import static com.example.practicamoviles_1tr.common.Constantes.DISTANCE;
+ import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
+ 
+ public class GymFragment extends Fragment implements Serializable {
+@@ -32,6 +33,12 @@
+     private List<MapPoint> mapPoints;
+     private ListView listView;
+     MapPointAdapter adapter = null;
++    private double longitude, latitude;
++
++    public GymFragment(double longitude, double latitude) {
++        this.longitude = longitude;
++        this.latitude = latitude;
++    }
+ 
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+@@ -56,7 +63,7 @@
+ 
+         IfaceApi ifaceApi = retrofit.create(IfaceApi.class);
+ 
+-        ifaceApi.getGyms().enqueue(new Callback<JsonResponse>() {
++        ifaceApi.getGyms(latitude, longitude, DISTANCE).enqueue(new Callback<JsonResponse>() {
+ 
+             @Override
+             public void onResponse(Call<JsonResponse> call, Response<JsonResponse> response) {
+Index: app/src/main/java/com/example/practicamoviles_1tr/common/FavsSettings.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.practicamoviles_1tr.common;\r\n\r\nimport android.content.Context;\r\nimport android.content.SharedPreferences;\r\nimport android.widget.Toast;\r\n\r\nimport com.example.practicamoviles_1tr.models.Location;\r\nimport com.example.practicamoviles_1tr.models.MapPoint;\r\nimport com.google.gson.Gson;\r\nimport com.google.gson.JsonArray;\r\nimport com.google.gson.JsonElement;\r\nimport com.google.gson.JsonObject;\r\nimport com.google.gson.JsonParser;\r\nimport com.google.gson.reflect.TypeToken;\r\n\r\nimport java.lang.reflect.Type;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\nimport static android.content.Context.MODE_PRIVATE;\r\nimport static android.widget.Toast.LENGTH_SHORT;\r\nimport static com.example.practicamoviles_1tr.common.Constantes.CLAVE_PREFERENCES;\r\nimport static com.example.practicamoviles_1tr.common.Constantes.CLAVE_PREFERENCES_ARRAY;\r\n\r\n//clase con metodos para obtener y guardar sharedpreferences. Le pasamos un context obligatorio para el sharedpreferences\r\npublic class FavsSettings {\r\n    private final Context context;\r\n    public FavsSettings(Context context){\r\n        this.context=context;\r\n    }\r\n\r\n    public ArrayList<MapPoint> getFavs(){\r\n        SharedPreferences preferences = context.getSharedPreferences(CLAVE_PREFERENCES, MODE_PRIVATE);\r\n        String json = preferences.getString(CLAVE_PREFERENCES_ARRAY, null);\r\n        ArrayList<MapPoint> mapPoints=new ArrayList<>();\r\n        JsonParser parser = new JsonParser();\r\n\r\n        //comprobar si el json es un array o un objeto solo\r\n        if(parser.parse(json).isJsonArray()){\r\n            //inicializamos el parser y le metemos el string del json\r\n            JsonArray arrayGson = parser.parse(json).getAsJsonArray();\r\n            //recorremos el array en el json\r\n            for (JsonElement obj:arrayGson){\r\n                JsonObject gsonMapPoint = obj.getAsJsonObject();\r\n\r\n                JsonObject gsonLocation = gsonMapPoint.get(\"location\").getAsJsonObject();\r\n\r\n                double latitude = gsonLocation.get(\"latitude\").getAsDouble();\r\n                double longitude = gsonLocation.get(\"longitude\").getAsDouble();\r\n\r\n                String title = gsonMapPoint.get(\"title\").getAsString();\r\n                Location location = new Location(latitude, longitude);\r\n                MapPoint mapPoint = new MapPoint(title, location);\r\n                mapPoints.add(mapPoint);\r\n            }\r\n        }else{\r\n            JsonObject objJson = parser.parse(json).getAsJsonObject();\r\n            JsonObject locationJson = objJson.get(\"location\").getAsJsonObject();\r\n            double latitude = locationJson.get(\"latitude\").getAsDouble();\r\n            double longitude = locationJson.get(\"longitude\").getAsDouble();\r\n\r\n            String title = objJson.get(\"title\").getAsString();\r\n            Location location = new Location(latitude, longitude);\r\n            MapPoint mapPoint = new MapPoint(title, location);\r\n\r\n            mapPoints.add(mapPoint);\r\n        }\r\n\r\n        for(MapPoint mp:mapPoints){\r\n            System.out.println(mp.getTitle());\r\n        }\r\n        return mapPoints;\r\n    }\r\n    public void setFav(MapPoint newFav){\r\n        SharedPreferences preferences = context.getSharedPreferences(CLAVE_PREFERENCES, MODE_PRIVATE);\r\n        String json = preferences.getString(CLAVE_PREFERENCES_ARRAY, null);\r\n\r\n        ArrayList<MapPoint> favs = null;\r\n        String arrGson = null;\r\n        Gson gson = new Gson();\r\n        System.out.println(json);\r\n        if(json!=null){\r\n            boolean repeat=false;\r\n            favs = getFavs();\r\n\r\n            for(MapPoint mp:favs){\r\n                if(mp.getTitle().equalsIgnoreCase(newFav.getTitle())){\r\n                    repeat=true;\r\n                }\r\n            }\r\n            if(!repeat){\r\n                favs.add(newFav);\r\n                arrGson = gson.toJson(favs);\r\n                SharedPreferences.Editor editor = preferences.edit();\r\n                editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);\r\n                editor.apply();\r\n                Toast toastRepeat = Toast.makeText(context, \"Añadido a favoritos\", LENGTH_SHORT);\r\n                toastRepeat.show();\r\n            }else{\r\n                Toast toastRepeat = Toast.makeText(context, \"Ya está en favoritos\", LENGTH_SHORT);\r\n                toastRepeat.show();\r\n            }\r\n\r\n        }else{\r\n            arrGson = gson.toJson(newFav);\r\n            SharedPreferences.Editor editor = preferences.edit();\r\n            editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);\r\n            editor.apply();\r\n            Toast toastRepeat = Toast.makeText(context, \"Añadido a favoritos\", LENGTH_SHORT);\r\n            toastRepeat.show();\r\n        }\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/practicamoviles_1tr/common/FavsSettings.java	(revision e1b6117bc27b7e42b95dbfffaa141790075901ea)
++++ app/src/main/java/com/example/practicamoviles_1tr/common/FavsSettings.java	(date 1607101812965)
+@@ -61,7 +61,7 @@
+ 
+             String title = objJson.get("title").getAsString();
+             Location location = new Location(latitude, longitude);
+-            MapPoint mapPoint = new MapPoint(title, location);
++            MapPoint mapPoint = new MapPoint(title, location, true);
+ 
+             mapPoints.add(mapPoint);
+         }
+Index: app/src/main/java/com/example/practicamoviles_1tr/api_manager/IfaceApi.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.practicamoviles_1tr.api_manager;\r\n\r\nimport com.example.practicamoviles_1tr.models.MapPoint;\r\n\r\nimport java.util.List;\r\n\r\nimport retrofit2.Call;\r\nimport retrofit2.http.GET;\r\nimport retrofit2.http.Headers;\r\n\r\nimport static com.example.practicamoviles_1tr.common.Constantes.END_POINT_POOLS;\r\nimport static com.example.practicamoviles_1tr.common.Constantes.END_POINT_SPORTS;\r\n\r\npublic interface IfaceApi {\r\n    @Headers({\"Accept: application/json , Content-Type: application/json\"})\r\n    @GET(END_POINT_POOLS)\r\n    Call<JsonResponse> getPools();\r\n\r\n    @Headers({\"Accept: application/json , Content-Type: application/json\"})\r\n    @GET(END_POINT_SPORTS)\r\n    Call<JsonResponse> getGyms();\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/practicamoviles_1tr/api_manager/IfaceApi.java	(revision e1b6117bc27b7e42b95dbfffaa141790075901ea)
++++ app/src/main/java/com/example/practicamoviles_1tr/api_manager/IfaceApi.java	(date 1607109904443)
+@@ -1,12 +1,9 @@
+ package com.example.practicamoviles_1tr.api_manager;
+ 
+-import com.example.practicamoviles_1tr.models.MapPoint;
+-
+-import java.util.List;
+-
+ import retrofit2.Call;
+ import retrofit2.http.GET;
+ import retrofit2.http.Headers;
++import retrofit2.http.Query;
+ 
+ import static com.example.practicamoviles_1tr.common.Constantes.END_POINT_POOLS;
+ import static com.example.practicamoviles_1tr.common.Constantes.END_POINT_SPORTS;
+@@ -14,9 +11,9 @@
+ public interface IfaceApi {
+     @Headers({"Accept: application/json , Content-Type: application/json"})
+     @GET(END_POINT_POOLS)
+-    Call<JsonResponse> getPools();
++    Call<JsonResponse> getPools(@Query("latitud") double latitude, @Query("longitud") double longitude,@Query("distancia") long distancia);
+ 
+     @Headers({"Accept: application/json , Content-Type: application/json"})
+     @GET(END_POINT_SPORTS)
+-    Call<JsonResponse> getGyms();
++    Call<JsonResponse> getGyms(@Query("latitud") double latitude, @Query("longitud") double longitude,@Query("distancia") long distancia);
+ }
+Index: app/src/main/java/com/example/practicamoviles_1tr/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.practicamoviles_1tr;\r\n\r\nimport android.Manifest;\r\nimport android.content.BroadcastReceiver;\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.content.IntentFilter;\r\nimport android.content.SharedPreferences;\r\nimport android.content.pm.PackageManager;\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\nimport android.view.MenuItem;\r\nimport android.widget.Toast;\r\n\r\nimport com.example.practicamoviles_1tr.fragments.CurrentLocation;\r\nimport com.example.practicamoviles_1tr.fragments.GymFragment;\r\nimport com.example.practicamoviles_1tr.fragments.HomeFragment;\r\nimport com.example.practicamoviles_1tr.fragments.PoolsFragment;\r\nimport com.example.practicamoviles_1tr.services.RunGPS;\r\nimport com.google.android.material.navigation.NavigationView;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.core.app.ActivityCompat;\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.core.view.GravityCompat;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.fragment.app.FragmentManager;\r\nimport androidx.localbroadcastmanager.content.LocalBroadcastManager;\r\nimport androidx.drawerlayout.widget.DrawerLayout;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.appcompat.widget.Toolbar;\r\n\r\nimport static com.example.practicamoviles_1tr.common.Constantes.INTENT_LOCALIZATION_ACTION;\r\nimport static com.example.practicamoviles_1tr.common.Constantes.LATITUDE;\r\nimport static com.example.practicamoviles_1tr.common.Constantes.LONGITUDE;\r\n\r\npublic class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{\r\n    private NavigationView navView;\r\n    Double latitude=0.0;\r\n    Double longitude=0.0;\r\n    private Fragment fragment;\r\n    public static final String TITLE_KEY = \"TITLE_KEY\";\r\n    public static final String TITLE = \"My location\";\r\n    public static final String DESCRIPTION_KEY = \"DESCRIPTION_KEY\";\r\n    public static final String DESCRIPTION = \"This is my location\";\r\n\r\n    //constantes de los bundle\r\n    public static final  String CURRENT_LOCATION_LATITUDE = \"currentLocationLatitude\";\r\n    public static final  String CURRENT_LOCATION_LONGITUDE = \"currentLocationLongitude\";\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n\r\n\r\n\r\n        Toolbar toolbar = findViewById(R.id.toolbar);\r\n        setSupportActionBar(toolbar);\r\n\r\n        navView = findViewById(R.id.nav_view);\r\n\r\n        //añadimos la toolbar\r\n        setToolbar();\r\n        //llamamos al metodo de mas abajo que inicia el servicio del gps(sin funcion todavia)\r\n        getGPS();\r\n        //hay que establecer el fragment de inicio\r\n        setFragment(0);\r\n        //activamos el listener para el navView para que pueda cambiar cuando se pulsa una opcion del menu\r\n        if (navView != null) {\r\n            navView.setNavigationItemSelectedListener(this);\r\n        }\r\n\r\n\r\n    }\r\n\r\n\r\n    //metodo para incluir la toolbar\r\n    private void setToolbar(){\r\n        Toolbar toolbar = findViewById(R.id.toolbar);\r\n        setSupportActionBar(toolbar);\r\n        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_toolbar);\r\n        getSupportActionBar().setDisplayHomeAsUpEnabled(true);\r\n    }\r\n\r\n\r\n\r\n    //metodo que controla la interaccion con el navigation view\r\n    @Override\r\n    public boolean onOptionsItemSelected(MenuItem item) {\r\n        DrawerLayout mDrawerLayout = findViewById(R.id.drawer_layout);\r\n        if(item.getItemId() == android.R.id.home){\r\n            mDrawerLayout.openDrawer(GravityCompat.START);\r\n            return true;\r\n        }\r\n        return super.onOptionsItemSelected(item);\r\n    }\r\n\r\n\r\n    @Override\r\n    public boolean onNavigationItemSelected(MenuItem menuItem) {\r\n\r\n        switch (menuItem.getItemId()){\r\n            case R.id.ubicacionactual:\r\n                //System.out.println(\"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: \"+latitude+\"lon: \"+longitude);\r\n                setFragment(1);\r\n                break;\r\n\r\n            case R.id.guardarubicacion:\r\n                break;\r\n            case R.id.instalacionesdeportivas:\r\n                setFragment(2);\r\n                break;\r\n            case R.id.piscinas:\r\n                setFragment(3);\r\n                break;\r\n        }\r\n        return false;\r\n    }\r\n\r\n    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {\r\n        @Override\r\n        public void onReceive(Context context, Intent intent) {\r\n            latitude = intent.getDoubleExtra(LATITUDE, 0);\r\n            longitude = intent.getDoubleExtra(LONGITUDE, 0);\r\n        }\r\n    };\r\n\r\n    public void startService() {\r\n        Intent mServiceIntent = new Intent(getApplicationContext(), RunGPS.class);\r\n        startService(mServiceIntent);\r\n    }\r\n\r\n    //metodo para controlar los permisos de gps y su servicio\r\n    private void getGPS(){\r\n        if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {\r\n            ActivityCompat.requestPermissions(MainActivity.this,\r\n                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);\r\n        } else {\r\n            //este servicio inicia el gps\r\n            startService();\r\n        }\r\n        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,\r\n                new IntentFilter(INTENT_LOCALIZATION_ACTION));\r\n    }\r\n\r\n    @Override\r\n    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {\r\n        if (requestCode == 1) {\r\n            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {\r\n                Toast.makeText(getApplicationContext(), R.string.gps_ok, Toast.LENGTH_SHORT).show();\r\n                startService();\r\n            } else {\r\n                Toast.makeText(getApplicationContext(), R.string.gps_no_ok, Toast.LENGTH_SHORT).show();\r\n            }\r\n        }\r\n\r\n    }\r\n\r\n\r\n\r\n    //metodo para cambiar fragmentos\r\n    public void setFragment(int fragmentNum){\r\n        FragmentManager manager = getSupportFragmentManager();\r\n\r\n        //este bundle se encarga de pasar datos a los fragments como si fuese un intent\r\n        Bundle bundle = new Bundle();\r\n\r\n        switch(fragmentNum){\r\n            //0 sera el fragment que se muestre al iniciar la app\r\n            case 0:\r\n                fragment = new HomeFragment();\r\n                manager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();\r\n                break;\r\n            //1 para la opcion de mostrar la ubicacion actual\r\n            case 1:\r\n                bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);\r\n                bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);\r\n                fragment = new CurrentLocation();\r\n                fragment.setArguments(bundle);\r\n                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();\r\n                break;\r\n            //2 para el fragment de instalaciones deportivas(mapa)\r\n            case 2:\r\n                Log.d(\"tag\", \"entra\");\r\n                bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);\r\n                bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);\r\n                fragment = new GymFragment();\r\n                fragment.setArguments(bundle);\r\n                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();\r\n                break;\r\n            case 3:\r\n                bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);\r\n                bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);\r\n                fragment = new PoolsFragment();\r\n                fragment.setArguments(bundle);\r\n                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();\r\n                break;\r\n        }\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/practicamoviles_1tr/MainActivity.java	(revision e1b6117bc27b7e42b95dbfffaa141790075901ea)
++++ app/src/main/java/com/example/practicamoviles_1tr/MainActivity.java	(date 1607110013846)
+@@ -13,6 +13,7 @@
+ import android.widget.Toast;
+ 
+ import com.example.practicamoviles_1tr.fragments.CurrentLocation;
++import com.example.practicamoviles_1tr.fragments.FavouritesFragment;
+ import com.example.practicamoviles_1tr.fragments.GymFragment;
+ import com.example.practicamoviles_1tr.fragments.HomeFragment;
+ import com.example.practicamoviles_1tr.fragments.PoolsFragment;
+@@ -114,6 +115,9 @@
+             case R.id.piscinas:
+                 setFragment(3);
+                 break;
++            case R.id.favoritos:
++                setFragment(4);
++                break;
+         }
+         return false;
+     }
+@@ -185,17 +189,23 @@
+                 Log.d("tag", "entra");
+                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
+                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
+-                fragment = new GymFragment();
++                fragment = new GymFragment(longitude, latitude);
+                 fragment.setArguments(bundle);
+                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+                 break;
++                //3 para mostrar las piscinas
+             case 3:
+                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
+                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
+-                fragment = new PoolsFragment();
++                fragment = new PoolsFragment(longitude, latitude);
+                 fragment.setArguments(bundle);
+                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+                 break;
++            //4 para mostrar los favoritos
++            case 4:
++                fragment = new FavouritesFragment();
++                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
++
+         }
+     }
+ 
+Index: app/src/main/java/com/example/practicamoviles_1tr/common/Constantes.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.practicamoviles_1tr.common;\r\n\r\npublic class Constantes {\r\n    public static final String LATITUDE = \"LATITUDE\";\r\n    public static final String LONGITUDE = \"LONGITUDE\";\r\n    //constante para el broadcast\r\n    public static final String INTENT_LOCALIZATION_ACTION = \"location_position\";\r\n    //urls de la api (entrypoint y endpoints para polideportivos y otro para piscinas)\r\n    public static final String ENTRY_POINT= \"https://datos.madrid.es/egob/\";\r\n    public static final String END_POINT_SPORTS= \"catalogo/200186-0-polideportivos.json\";\r\n    public static final String END_POINT_POOLS= \"catalogo/210227-0-piscinas-publicas.json\";\r\n    //duracion de la pantalla de carga\r\n    public static final int SPLASH_DURATION = 2000;\r\n\r\n    //constante para clave de sharedpreferences\r\n    public static final String CLAVE_PREFERENCES = \"favoritos\";\r\n    //constante para array de sharedpreferences\r\n    public static final String CLAVE_PREFERENCES_ARRAY = \"favoritosArray\";\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/practicamoviles_1tr/common/Constantes.java	(revision e1b6117bc27b7e42b95dbfffaa141790075901ea)
++++ app/src/main/java/com/example/practicamoviles_1tr/common/Constantes.java	(date 1607109847693)
+@@ -3,6 +3,7 @@
+ public class Constantes {
+     public static final String LATITUDE = "LATITUDE";
+     public static final String LONGITUDE = "LONGITUDE";
++    public static final long DISTANCE = 8000;
+     //constante para el broadcast
+     public static final String INTENT_LOCALIZATION_ACTION = "location_position";
+     //urls de la api (entrypoint y endpoints para polideportivos y otro para piscinas)
+Index: app/src/main/java/com/example/practicamoviles_1tr/common/MapPointAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.practicamoviles_1tr.common;\r\n\r\nimport android.content.Context;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.BaseAdapter;\r\nimport android.widget.TextView;\r\n\r\nimport com.example.practicamoviles_1tr.R;\r\nimport com.example.practicamoviles_1tr.models.MapPoint;\r\n\r\nimport java.util.List;\r\n\r\n\r\npublic class MapPointAdapter extends BaseAdapter {\r\n\r\n    private Context mContext;\r\n    private List<MapPoint> mapPoints;\r\n\r\n    public MapPointAdapter(Context mContext, List<MapPoint> mapPoints) {\r\n        this.mContext = mContext;\r\n        this.mapPoints = mapPoints;\r\n    }\r\n\r\n    @Override\r\n    public int getCount() {\r\n        return mapPoints.size();\r\n    }\r\n\r\n    @Override\r\n    public Object getItem(int position) {\r\n        return mapPoints.get(position);\r\n    }\r\n\r\n    @Override\r\n    public long getItemId(int position) {\r\n        return position;\r\n    }\r\n\r\n    @Override\r\n    public View getView(int position, View convertView, ViewGroup parent) {\r\n        if(convertView==null){\r\n            LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);\r\n            convertView = layoutInflater.inflate(R.layout.list_mappoints, null);\r\n        }\r\n        TextView textView=convertView.findViewById(R.id.txtPools);\r\n        textView.setText(mapPoints.get(position).getTitle());\r\n\r\n        return convertView;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/practicamoviles_1tr/common/MapPointAdapter.java	(revision e1b6117bc27b7e42b95dbfffaa141790075901ea)
++++ app/src/main/java/com/example/practicamoviles_1tr/common/MapPointAdapter.java	(date 1607105462652)
+@@ -5,8 +5,11 @@
+ import android.view.View;
+ import android.view.ViewGroup;
+ import android.widget.BaseAdapter;
++import android.widget.ImageView;
+ import android.widget.TextView;
+ 
++import androidx.annotation.DrawableRes;
++
+ import com.example.practicamoviles_1tr.R;
+ import com.example.practicamoviles_1tr.models.MapPoint;
+ 
+@@ -46,6 +49,10 @@
+         }
+         TextView textView=convertView.findViewById(R.id.txtPools);
+         textView.setText(mapPoints.get(position).getTitle());
++        ImageView imagen = convertView.findViewById(R.id.favIcon);
++        if(mapPoints.get(position).isFav()){
++            imagen.setImageResource(R.drawable.ic_star_on);
++        }
+ 
+         return convertView;
+     }
+Index: app/src/main/java/com/example/practicamoviles_1tr/fragments/FavouritesFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.practicamoviles_1tr.fragments;\r\n\r\nimport android.content.Context;\r\nimport android.content.SharedPreferences;\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\n\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.example.practicamoviles_1tr.R;\r\nimport com.example.practicamoviles_1tr.models.Location;\r\nimport com.example.practicamoviles_1tr.models.MapPoint;\r\nimport com.google.gson.Gson;\r\nimport com.google.gson.JsonArray;\r\nimport com.google.gson.JsonElement;\r\nimport com.google.gson.JsonObject;\r\nimport com.google.gson.JsonParser;\r\n\r\nimport java.util.ArrayList;\r\n\r\nimport static android.content.Context.MODE_PRIVATE;\r\nimport static com.example.practicamoviles_1tr.common.Constantes.CLAVE_PREFERENCES;\r\nimport static com.example.practicamoviles_1tr.common.Constantes.CLAVE_PREFERENCES_ARRAY;\r\n\r\npublic class FavouritesFragment extends Fragment {\r\n\r\n    private ArrayList<MapPoint> favsList;\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n\r\n        return inflater.inflate(R.layout.fragment_favourites, container, false);\r\n    }\r\n\r\n\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/practicamoviles_1tr/fragments/FavouritesFragment.java	(revision e1b6117bc27b7e42b95dbfffaa141790075901ea)
++++ app/src/main/java/com/example/practicamoviles_1tr/fragments/FavouritesFragment.java	(date 1607100533668)
+@@ -6,10 +6,14 @@
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
++import android.widget.ListView;
+ 
++import androidx.annotation.Nullable;
+ import androidx.fragment.app.Fragment;
+ 
+ import com.example.practicamoviles_1tr.R;
++import com.example.practicamoviles_1tr.common.FavsSettings;
++import com.example.practicamoviles_1tr.common.MapPointAdapter;
+ import com.example.practicamoviles_1tr.models.Location;
+ import com.example.practicamoviles_1tr.models.MapPoint;
+ import com.google.gson.Gson;
+@@ -27,6 +31,8 @@
+ public class FavouritesFragment extends Fragment {
+ 
+     private ArrayList<MapPoint> favsList;
++    private ListView lvFavs;
++    private MapPointAdapter adapter = null;
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+@@ -34,7 +40,13 @@
+         return inflater.inflate(R.layout.fragment_favourites, container, false);
+     }
+ 
+-
+-
+-
++    @Override
++    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
++        super.onActivityCreated(savedInstanceState);
++        lvFavs = (ListView) getActivity().findViewById(R.id.lvFavs);
++        favsList = new FavsSettings(getActivity()).getFavs();
++        adapter=new MapPointAdapter(getContext(), favsList);
++        lvFavs.setAdapter(adapter);
++        adapter.notifyDataSetChanged();
++    }
+ }
+\ No newline at end of file

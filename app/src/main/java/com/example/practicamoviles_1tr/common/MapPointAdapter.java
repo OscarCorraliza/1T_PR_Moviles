@@ -54,6 +54,7 @@ public class MapPointAdapter extends BaseAdapter {
             imagen.setImageResource(R.drawable.ic_star_on);
         }
 
+
         return convertView;
     }
 }
