@@ -120,6 +120,8 @@ public class FavsSettings {
         Gson gson = new Gson();
 
         ArrayList<MapPoint> favs = getFavs();
+        //volvemos a hacer false la variable que indica si un mappoint es favorito
+        favs.get(position).setFav(false);
         favs.remove(position);
         String arrGson = gson.toJson(favs);
 
@@ -127,7 +129,5 @@ public class FavsSettings {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);
         editor.apply();
-
-
     }
 }
