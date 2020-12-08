@@ -14,6 +14,9 @@ public class Constantes {
     public static final int SPLASH_DURATION = 2000;
 
     //constante para clave de sharedpreferences
+    public static final String CLAVE_SAVELOCATION = "saveLocation";
+    public static final String CLAVE_SAVELOCATION_LONGITUDE = "saveLongitude";
+    public static final String CLAVE_SAVELOCATION_LATITUDE = "saveLatitude";
     public static final String CLAVE_PREFERENCES = "favoritos";
     //constante para array de sharedpreferences
     public static final String CLAVE_PREFERENCES_ARRAY = "favoritosArray";

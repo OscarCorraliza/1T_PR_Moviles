@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.practicamoviles_1tr.common.SaveLocation;
 import com.example.practicamoviles_1tr.fragments.CurrentLocation;
 import com.example.practicamoviles_1tr.fragments.FavouritesFragment;
 import com.example.practicamoviles_1tr.fragments.GymFragment;
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.guardarubicacion:
+                setFragment(5);
                 break;
             case R.id.instalacionesdeportivas:
                 setFragment(2);
@@ -175,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             //1 para la opcion de mostrar la ubicacion actual
             case 1:
+                Log.d("LOL", String.valueOf(latitude));
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
                 fragment = new CurrentLocation();
@@ -183,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             //2 para el fragment de instalaciones deportivas(mapa)
             case 2:
+                Log.d("LOL", String.valueOf(latitude));
                 Log.d("tag", "entra");
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
@@ -192,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
                 //3 para mostrar las piscinas
             case 3:
+                Log.d("LOL", String.valueOf(latitude));
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
                 fragment = new PoolsFragment(longitude, latitude);
@@ -202,7 +207,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case 4:
                 fragment = new FavouritesFragment();
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
-
+                break;
+            case 5:
+                //No la guarda.
+                Log.d("LOL", String.valueOf(latitude));
+                new SaveLocation(getApplicationContext(), latitude, longitude).saveLocation();
+                break;
         }
     }
 
