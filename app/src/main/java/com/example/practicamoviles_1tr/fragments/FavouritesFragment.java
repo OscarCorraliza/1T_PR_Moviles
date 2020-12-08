@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.practicamoviles_1tr.R;
 import com.example.practicamoviles_1tr.common.FavsSettings;
@@ -64,7 +65,14 @@ public class FavouritesFragment extends Fragment  {
         builder.setTitle(R.string.tituloAlert);
         builder.setMessage(R.string.mensajeAlert);
 
-        builder.setPositiveButton(R.string.optSiAlert, (dialog, which) -> new FavsSettings(getActivity()).removeFav(position));
+        builder.setPositiveButton(R.string.optSiAlert, (dialog, which) -> {
+            new FavsSettings(getActivity()).removeFav(position);
+            favsList = new FavsSettings(getActivity()).getFavs();
+            adapter=new MapPointAdapter(getContext(), favsList);
+            lvFavs.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        });
+
         builder.setNegativeButton(R.string.optNoAlert, null);
         AlertDialog dialog = builder.create();
         dialog.show();

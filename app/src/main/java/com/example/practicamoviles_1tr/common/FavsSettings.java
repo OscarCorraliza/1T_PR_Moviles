@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.example.practicamoviles_1tr.R;
+import com.example.practicamoviles_1tr.fragments.FavouritesFragment;
 import com.example.practicamoviles_1tr.models.Location;
 import com.example.practicamoviles_1tr.models.MapPoint;
 import com.google.gson.Gson;
@@ -35,6 +40,10 @@ public class FavsSettings {
         ArrayList<MapPoint> mapPoints=new ArrayList<>();
         JsonParser parser = new JsonParser();
 
+        if(json==null){
+            return new ArrayList<>();
+        }
+
         //comprobar si el json es un array o un objeto solo
         if(parser.parse(json).isJsonArray()){
             //inicializamos el parser y le metemos el string del json
@@ -65,6 +74,7 @@ public class FavsSettings {
 
             mapPoints.add(mapPoint);
         }
+
         return mapPoints;
     }
     public void setFav(MapPoint newFav){
@@ -117,5 +127,7 @@ public class FavsSettings {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);
         editor.apply();
+
+
     }
 }
