@@ -25,8 +25,10 @@ public class SaveLocation {
 
     public void saveLocation(){
         SharedPreferences preferences = context.getSharedPreferences(CLAVE_SAVELOCATION, MODE_PRIVATE);
-        latitude = Double.parseDouble(String.valueOf(preferences.getFloat(CLAVE_SAVELOCATION_LONGITUDE, 0)));
-        longitude = Double.parseDouble(String.valueOf(preferences.getFloat(CLAVE_SAVELOCATION_LATITUDE, 0)));
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putFloat(CLAVE_SAVELOCATION_LONGITUDE, (float) longitude);
+        editor.putFloat(CLAVE_SAVELOCATION_LATITUDE, (float) latitude);
 
         Log.d("LOL2", String.valueOf(latitude));
     }
