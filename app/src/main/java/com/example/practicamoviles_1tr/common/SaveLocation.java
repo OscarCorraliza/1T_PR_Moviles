@@ -29,7 +29,5 @@ public class SaveLocation {
 
         editor.putFloat(CLAVE_SAVELOCATION_LONGITUDE, (float) longitude);
         editor.putFloat(CLAVE_SAVELOCATION_LATITUDE, (float) latitude);
-
-        Log.d("LOL2", String.valueOf(latitude));
     }
 }

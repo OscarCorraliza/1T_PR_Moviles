@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import com.example.practicamoviles_1tr.R;
 
 import org.osmdroid.config.Configuration;
-import org.osmdroid.events.DelayedMapListener;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
@@ -27,15 +26,17 @@ import java.util.ArrayList;
 import static com.example.practicamoviles_1tr.common.Constantes.CURRENT_LOCATION_LATITUDE;
 import static com.example.practicamoviles_1tr.common.Constantes.CURRENT_LOCATION_LONGITUDE;
 import static com.example.practicamoviles_1tr.common.Constantes.DESCRIPTION_KEY;
-import static com.example.practicamoviles_1tr.common.Constantes.LATITUDE;
-import static com.example.practicamoviles_1tr.common.Constantes.LONGITUDE;
+import static com.example.practicamoviles_1tr.common.Constantes.MAPPOINT_LATITUDE;
+import static com.example.practicamoviles_1tr.common.Constantes.MAPPOINT_LONGITUDE;
 import static com.example.practicamoviles_1tr.common.Constantes.TITLE;
 
-public class CurrentLocation extends Fragment {
+
+public class MapPointMap extends Fragment {
 
     private MapView mMapView;
     private MapController mMapController;
     GeoPoint myGeoPosition;
+    GeoPoint mpGeoposition;
 
 
     private ArrayList<OverlayItem> mOverlayItems = new ArrayList<>();
@@ -43,7 +44,7 @@ public class CurrentLocation extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_current_location, container, false);
+        View view = inflater.inflate(R.layout.fragment_map_point_map, container, false);
         //conseguir el contexto del fragment
         Context fragmentContext = container.getContext();
 
@@ -52,6 +53,8 @@ public class CurrentLocation extends Fragment {
         Intent getDataIntent = getActivity().getIntent();
         myGeoPosition = new GeoPoint(getArguments().getDouble(CURRENT_LOCATION_LATITUDE), getArguments().getDouble(CURRENT_LOCATION_LONGITUDE));
         setMap(view);
+
+        mpGeoposition = new GeoPoint(getArguments().getDouble(MAPPOINT_LATITUDE), getArguments().getDouble(MAPPOINT_LONGITUDE));
 
         boolean add = mOverlayItems.add(new OverlayItem(getDataIntent.getStringExtra(TITLE), getDataIntent.getStringExtra(DESCRIPTION_KEY), myGeoPosition));
 
@@ -79,13 +82,14 @@ public class CurrentLocation extends Fragment {
     }
 
     public void setMap(View view){
-        mMapView = (MapView) view.findViewById(R.id.mapViewCurrentLocation);
+        mMapView = (MapView) view.findViewById(R.id.mapViewMapPoint);
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
         mMapController = (MapController) mMapView.getController();
         mMapController.setZoom(18);
 
-        mMapController.setCenter(myGeoPosition);
+        //mMapController.setCenter(myGeoPosition);
+        mMapController.setCenter(mpGeoposition);
 
     }
 }

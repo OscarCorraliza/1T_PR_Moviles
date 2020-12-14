@@ -13,7 +13,9 @@ import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import com.example.practicamoviles_1tr.MainActivity;
 import com.example.practicamoviles_1tr.R;
 import com.example.practicamoviles_1tr.api_manager.IfaceApi;
 import com.example.practicamoviles_1tr.api_manager.JsonResponse;
@@ -22,6 +24,7 @@ import com.example.practicamoviles_1tr.common.MapPointAdapter;
 import com.example.practicamoviles_1tr.models.MapPoint;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,10 +33,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.practicamoviles_1tr.common.Constantes.CURRENT_LOCATION_LATITUDE;
+import static com.example.practicamoviles_1tr.common.Constantes.CURRENT_LOCATION_LONGITUDE;
 import static com.example.practicamoviles_1tr.common.Constantes.DISTANCE;
 import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
+import static com.example.practicamoviles_1tr.common.Constantes.MAPPOINT_LATITUDE;
+import static com.example.practicamoviles_1tr.common.Constantes.MAPPOINT_LONGITUDE;
 
-public class PoolsFragment extends Fragment implements Serializable {
+ public class PoolsFragment extends Fragment implements Serializable {
 
     private ImageView imgFav;
     private List<MapPoint> mapPoints;
@@ -43,6 +50,8 @@ public class PoolsFragment extends Fragment implements Serializable {
     private FavsSettings favsSettings;
     private MapPoint mapPoint;
     private double longitude, latitude;
+
+
 
     public PoolsFragment(double longitude, double latitude) {
         this.longitude = longitude;
@@ -72,6 +81,22 @@ public class PoolsFragment extends Fragment implements Serializable {
                 ImageView favImg = (ImageView) view.findViewById(R.id.favIcon);
                 favImg.setImageResource(R.drawable.ic_star_on);
                 return false;
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                Bundle bundle = new Bundle();
+                bundle.putDouble(CURRENT_LOCATION_LATITUDE, new MainActivity().getLatitude());
+                bundle.putDouble(CURRENT_LOCATION_LONGITUDE, new MainActivity().getLongitude());
+
+                bundle.putDouble(MAPPOINT_LATITUDE, mapPoints.get(position).getLocation().getLatitude());
+                bundle.putDouble(MAPPOINT_LONGITUDE, mapPoints.get(position).getLocation().getLongitude());
+                Fragment fragment = new MapPointMap();
+                fragment.setArguments(bundle);
+                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
             }
         });
     }

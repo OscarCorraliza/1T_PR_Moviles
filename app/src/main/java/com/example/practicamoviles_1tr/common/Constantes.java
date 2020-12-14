@@ -1,6 +1,16 @@
 package com.example.practicamoviles_1tr.common;
 
 public class Constantes {
+    public static final String TITLE = "My location";
+    public static final String DESCRIPTION_KEY = "DESCRIPTION_KEY";
+
+    //constantes de los bundle
+    public static final  String CURRENT_LOCATION_LATITUDE = "currentLocationLatitude";
+    public static final  String CURRENT_LOCATION_LONGITUDE = "currentLocationLongitude";
+
+    public static final  String MAPPOINT_LATITUDE = "mapPointLatitude";
+    public static final  String MAPPOINT_LONGITUDE = "mapPointLongitude";
+
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
     public static final long DISTANCE = 8000;

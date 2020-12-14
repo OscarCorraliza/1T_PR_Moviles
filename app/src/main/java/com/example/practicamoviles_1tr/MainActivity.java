@@ -32,6 +32,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import static com.example.practicamoviles_1tr.common.Constantes.CURRENT_LOCATION_LATITUDE;
+import static com.example.practicamoviles_1tr.common.Constantes.CURRENT_LOCATION_LONGITUDE;
 import static com.example.practicamoviles_1tr.common.Constantes.INTENT_LOCALIZATION_ACTION;
 import static com.example.practicamoviles_1tr.common.Constantes.LATITUDE;
 import static com.example.practicamoviles_1tr.common.Constantes.LONGITUDE;
@@ -40,23 +42,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navView;
     Double latitude=0.0;
     Double longitude=0.0;
-    private Fragment fragment;
-    public static final String TITLE_KEY = "TITLE_KEY";
-    public static final String TITLE = "My location";
-    public static final String DESCRIPTION_KEY = "DESCRIPTION_KEY";
-    public static final String DESCRIPTION = "This is my location";
 
-    //constantes de los bundle
-    public static final  String CURRENT_LOCATION_LATITUDE = "currentLocationLatitude";
-    public static final  String CURRENT_LOCATION_LONGITUDE = "currentLocationLongitude";
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    private Fragment fragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         navView = findViewById(R.id.nav_view);
 
@@ -69,8 +70,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (navView != null) {
             navView.setNavigationItemSelectedListener(this);
         }
-
-
     }
 
 
@@ -177,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             //1 para la opcion de mostrar la ubicacion actual
             case 1:
-                Log.d("LOL", String.valueOf(latitude));
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
                 fragment = new CurrentLocation();
@@ -186,8 +184,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             //2 para el fragment de instalaciones deportivas(mapa)
             case 2:
-                Log.d("LOL", String.valueOf(latitude));
-                Log.d("tag", "entra");
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
                 fragment = new GymFragment(longitude, latitude);
@@ -196,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
                 //3 para mostrar las piscinas
             case 3:
-                Log.d("LOL", String.valueOf(latitude));
                 bundle.putDouble(CURRENT_LOCATION_LATITUDE, latitude);
                 bundle.putDouble(CURRENT_LOCATION_LONGITUDE, longitude);
                 fragment = new PoolsFragment(longitude, latitude);
@@ -209,8 +204,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;
             case 5:
-                //No la guarda.
-                Log.d("LOL", String.valueOf(latitude));
                 new SaveLocation(getApplicationContext(), latitude, longitude).saveLocation();
                 break;
         }
