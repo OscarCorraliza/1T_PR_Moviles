@@ -7,22 +7,19 @@
     tools:context=".fragments.HomeFragment">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/colorFragment"
-        android:gravity="center_vertical"
+        android:gravity="center"
         >
 
-        <TextView
-            android:id="@+id/textView2"
+        <Button
+            android:id="@+id/btnPosition"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="30sp"
-            tools:text="fjfdifhndundnfidfn"
-            android:padding="30dp"
-
-            />
+            android:text="@string/lastPosition"/>
     </LinearLayout>
 
 

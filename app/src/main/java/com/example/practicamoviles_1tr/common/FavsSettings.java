@@ -99,10 +99,10 @@ public class FavsSettings {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);
                 editor.apply();
-                Toast toastRepeat = Toast.makeText(context, "Añadido a favoritos", LENGTH_SHORT);
+                Toast toastRepeat = Toast.makeText(context, R.string.newFav, LENGTH_SHORT);
                 toastRepeat.show();
             }else{
-                Toast toastRepeat = Toast.makeText(context, "Ya está en favoritos", LENGTH_SHORT);
+                Toast toastRepeat = Toast.makeText(context, R.string.favSave, LENGTH_SHORT);
                 toastRepeat.show();
             }
 
@@ -111,7 +111,7 @@ public class FavsSettings {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(CLAVE_PREFERENCES_ARRAY, arrGson);
             editor.apply();
-            Toast toastRepeat = Toast.makeText(context, "Añadido a favoritos", LENGTH_SHORT);
+            Toast toastRepeat = Toast.makeText(context, R.string.newFav, LENGTH_SHORT);
             toastRepeat.show();
         }
     }

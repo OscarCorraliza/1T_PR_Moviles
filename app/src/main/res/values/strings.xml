@@ -28,7 +28,10 @@
     <string name="mensajeAlert">¿Quiere eliminar este favorito?</string>
     <string name="optSiAlert">Eliminar</string>
     <string name="optNoAlert">No</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="lastPosition">Acceder a ubicacion guardada</string>
+
+    <string name="favSave">Ya esta en favoritos</string>
+    <string name="newFav">Añadido a favoritos</string>
+    <string name="location">No hay ninguna ubicacion guardada</string>
 </resources>

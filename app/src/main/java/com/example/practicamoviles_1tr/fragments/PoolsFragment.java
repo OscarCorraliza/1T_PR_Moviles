@@ -89,8 +89,6 @@ import static com.example.practicamoviles_1tr.common.Constantes.MAPPOINT_LONGITU
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 Bundle bundle = new Bundle();
-                bundle.putDouble(CURRENT_LOCATION_LATITUDE, new MainActivity().getLatitude());
-                bundle.putDouble(CURRENT_LOCATION_LONGITUDE, new MainActivity().getLongitude());
 
                 bundle.putDouble(MAPPOINT_LATITUDE, mapPoints.get(position).getLocation().getLatitude());
                 bundle.putDouble(MAPPOINT_LONGITUDE, mapPoints.get(position).getLocation().getLongitude());

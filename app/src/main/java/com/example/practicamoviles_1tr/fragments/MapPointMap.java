@@ -35,7 +35,6 @@ public class MapPointMap extends Fragment {
 
     private MapView mMapView;
     private MapController mMapController;
-    GeoPoint myGeoPosition;
     GeoPoint mpGeoposition;
 
 
@@ -51,12 +50,11 @@ public class MapPointMap extends Fragment {
         Configuration.getInstance().load(fragmentContext, PreferenceManager.getDefaultSharedPreferences(fragmentContext));
 
         Intent getDataIntent = getActivity().getIntent();
-        myGeoPosition = new GeoPoint(getArguments().getDouble(CURRENT_LOCATION_LATITUDE), getArguments().getDouble(CURRENT_LOCATION_LONGITUDE));
         setMap(view);
 
         mpGeoposition = new GeoPoint(getArguments().getDouble(MAPPOINT_LATITUDE), getArguments().getDouble(MAPPOINT_LONGITUDE));
 
-        boolean add = mOverlayItems.add(new OverlayItem(getDataIntent.getStringExtra(TITLE), getDataIntent.getStringExtra(DESCRIPTION_KEY), myGeoPosition));
+        boolean add = mOverlayItems.add(new OverlayItem(getDataIntent.getStringExtra(TITLE), getDataIntent.getStringExtra(DESCRIPTION_KEY), mpGeoposition));
 
 
         ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(mOverlayItems, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
