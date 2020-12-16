@@ -18,6 +18,7 @@ import com.example.practicamoviles_1tr.fragments.FavouritesFragment;
 import com.example.practicamoviles_1tr.fragments.GymFragment;
 import com.example.practicamoviles_1tr.fragments.HomeFragment;
 import com.example.practicamoviles_1tr.fragments.PoolsFragment;
+import com.example.practicamoviles_1tr.fragments.WebSitesFragment;
 import com.example.practicamoviles_1tr.services.RunGPS;
 import com.google.android.material.navigation.NavigationView;
 
@@ -116,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.favoritos:
                 setFragment(4);
                 break;
+            case R.id.paginasinteres:
+                setFragment(6);
+                break;
         }
         return false;
     }
@@ -203,8 +207,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragment = new FavouritesFragment();
                 manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;
+            //5 para guardar ubicacion
             case 5:
                 new SaveLocation(getApplicationContext(), latitude, longitude).saveLocation();
+                break;
+            //6 para mostrar las webs
+            case 6:
+                fragment = new WebSitesFragment();
+                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
                 break;
         }
     }

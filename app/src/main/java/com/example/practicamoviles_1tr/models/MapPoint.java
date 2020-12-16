@@ -21,17 +21,11 @@ public class MapPoint implements Parcelable {
     //booleano para controlar si se ha guardado en favoritos
     private boolean isFav;
 
-    public MapPoint(String title, Location location) {
-        this.title = title;
-        this.location = location;
-    }
     public MapPoint(String title, Location location, boolean isFav) {
         this.title = title;
         this.location = location;
         this.isFav=isFav;
     }
-
-    public MapPoint(){}
 
     protected MapPoint(Parcel in) {
         title = in.readString();

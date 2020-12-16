@@ -81,8 +81,8 @@ public class FavsSettings {
         SharedPreferences preferences = context.getSharedPreferences(CLAVE_PREFERENCES, MODE_PRIVATE);
         String json = preferences.getString(CLAVE_PREFERENCES_ARRAY, null);
 
-        ArrayList<MapPoint> favs = null;
-        String arrGson = null;
+        ArrayList<MapPoint> favs;
+        String arrGson;
         Gson gson = new Gson();
         if(json!=null){
             boolean repeat=false;

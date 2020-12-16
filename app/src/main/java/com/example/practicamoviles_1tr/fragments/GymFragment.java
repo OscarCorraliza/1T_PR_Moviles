@@ -33,10 +33,9 @@ import static com.example.practicamoviles_1tr.common.Constantes.ENTRY_POINT;
 
 public class GymFragment extends Fragment implements Serializable {
 
-    private List<MapPoint> mapPoints;
-    private List<MapPoint> mapPointsFavs;
+    private List<MapPoint> mapPoints, mapPointsFavs;
     private ListView listView;
-    MapPointAdapter adapter = null;
+    private MapPointAdapter adapter = null;
     private FavsSettings favsSettings;
     private MapPoint mapPoint;
     private double longitude, latitude;
@@ -50,26 +49,22 @@ public class GymFragment extends Fragment implements Serializable {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mappoints, container, false);
-
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        listView = (ListView)getActivity().findViewById(R.id.lvMapPoints);
+        listView = getActivity().findViewById(R.id.lvMapPoints);
         getGyms();
         favsSettings = new FavsSettings(getActivity());
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                mapPoint = mapPoints.get(position);
-                favsSettings.setFav(mapPoint);
-                ImageView favImg = (ImageView) view.findViewById(R.id.favIcon);
-                favImg.setImageResource(R.drawable.ic_star_on);
-                return false;
-            }
+        listView.setOnItemLongClickListener((parent, view, position, id) -> {
+            mapPoint = mapPoints.get(position);
+            favsSettings.setFav(mapPoint);
+            ImageView favImg = view.findViewById(R.id.favIcon);
+            favImg.setImageResource(R.drawable.ic_star_on);
+            return false;
         });
     }
 
@@ -96,7 +91,7 @@ public class GymFragment extends Fragment implements Serializable {
                             }
                         }
                     }
-                    adapter=new MapPointAdapter(getContext(), mapPoints);
+                    adapter=new MapPointAdapter(getContext(), mapPoints, getActivity());
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 }

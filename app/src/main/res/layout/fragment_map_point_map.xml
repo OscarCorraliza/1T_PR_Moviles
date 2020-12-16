@@ -10,10 +10,9 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <com.google.android.gms.maps.MapView
+        <org.osmdroid.views.MapView
             android:id="@+id/mapViewMapPoint"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1" />
+            android:layout_height="fill_parent"/>
     </LinearLayout>
 </FrameLayout>

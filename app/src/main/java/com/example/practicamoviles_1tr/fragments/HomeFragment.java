@@ -31,39 +31,32 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // asiganamos la vista del layout de este fragmento
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        button = getActivity().findViewById(R.id.btnPosition);
+        button.setOnClickListener(v -> {
+            SharedPreferences preferences = getActivity().getSharedPreferences(CLAVE_SAVELOCATION, MODE_PRIVATE);
+            double latitude = preferences.getFloat(CLAVE_SAVELOCATION_LATITUDE, 0);
+            double longitude = preferences.getFloat(CLAVE_SAVELOCATION_LONGITUDE, 0);
 
-        button = (Button) getActivity().findViewById(R.id.btnPosition);
+            if(latitude == 0 && longitude == 0){
+                Toast toastRepeat = Toast.makeText(getActivity(), R.string.location, LENGTH_SHORT);
+                toastRepeat.show();
+            } else{
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                Bundle bundle = new Bundle();
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences preferences = getActivity().getSharedPreferences(CLAVE_SAVELOCATION, MODE_PRIVATE);
-                double latitude = preferences.getFloat(CLAVE_SAVELOCATION_LATITUDE, 0);
-                double longitude = preferences.getFloat(CLAVE_SAVELOCATION_LONGITUDE, 0);
+                bundle.putDouble(MAPPOINT_LATITUDE, latitude);
+                bundle.putDouble(MAPPOINT_LONGITUDE, longitude);
 
-                if(latitude == 0 && longitude == 0){
-                    Toast toastRepeat = Toast.makeText(getActivity(), R.string.location, LENGTH_SHORT);
-                    toastRepeat.show();
-                } else{
-                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                    Bundle bundle = new Bundle();
-
-                    bundle.putDouble(MAPPOINT_LATITUDE, latitude);
-                    bundle.putDouble(MAPPOINT_LONGITUDE, longitude);
-
-                    Fragment fragment = new MapPointMap();
-                    fragment.setArguments(bundle);
-                    manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
-                }
+                Fragment fragment = new MapPointMap();
+                fragment.setArguments(bundle);
+                manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
             }
         });
     }

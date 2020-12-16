@@ -18,7 +18,6 @@ public class Location implements Parcelable {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-    public Location(){}
 
     protected Location(Parcel in) {
         latitude = in.readDouble();

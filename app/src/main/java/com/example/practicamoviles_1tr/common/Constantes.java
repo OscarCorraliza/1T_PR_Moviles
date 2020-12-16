@@ -13,6 +13,9 @@ public class Constantes {
 
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
+    public static final String URL_BUNDLE = "URL";
+
+
     public static final long DISTANCE = 8000;
     //constante para el broadcast
     public static final String INTENT_LOCALIZATION_ACTION = "location_position";
@@ -30,4 +33,9 @@ public class Constantes {
     public static final String CLAVE_PREFERENCES = "favoritos";
     //constante para array de sharedpreferences
     public static final String CLAVE_PREFERENCES_ARRAY = "favoritosArray";
+
+    public static final String WEB_1 = "https://guiafitness.com/deportes/natacion";
+    public static final String WEB_2 = "https://www.cnciudadalcorcon.es/";
+    public static final String WEB_3 = "https://www.lomejordelbarrio.com/alcorcon/polideportivos";
+
 }

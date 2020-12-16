@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.WebSitesFragment">
+    tools:context=".fragments.WebView">
 
-    <ListView
-        android:id="@+id/id_lvWeb"
+    <WebView
+        android:id="@+id/id_web"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="10dp"
-        android:padding="5dp"/>
+        android:layout_height="match_parent" />
 </FrameLayout>

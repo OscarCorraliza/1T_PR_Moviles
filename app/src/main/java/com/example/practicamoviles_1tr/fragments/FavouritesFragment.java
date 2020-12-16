@@ -25,37 +25,32 @@ public class FavouritesFragment extends Fragment  {
     private ArrayList<MapPoint> favsList;
     private ListView lvFavs;
     private MapPointAdapter adapter = null;
-    private int id;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_favourites, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        lvFavs = (ListView) getActivity().findViewById(R.id.lvFavs);
+        lvFavs = getActivity().findViewById(R.id.lvFavs);
         favsList = new FavsSettings(getActivity()).getFavs();
-        adapter=new MapPointAdapter(getContext(), favsList);
+        adapter=new MapPointAdapter(getContext(), favsList, getActivity());
         lvFavs.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        lvFavs.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                showDialog(position);
-
-                //esto actualiza el listview pero al pulsar otro item (probar con timerTask)
-                favsList = new FavsSettings(getActivity()).getFavs();
-                adapter=new MapPointAdapter(getContext(), favsList);
-                lvFavs.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-                return false;
-            }
+        lvFavs.setOnItemLongClickListener((parent, view, position, id) -> {
+            showDialog(position);
+            //refrescamos el adapter
+            favsList = new FavsSettings(getActivity()).getFavs();
+            adapter=new MapPointAdapter(getContext(), favsList, getActivity());
+            lvFavs.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            return false;
         });
-
-
     }
 
 
@@ -68,11 +63,10 @@ public class FavouritesFragment extends Fragment  {
         builder.setPositiveButton(R.string.optSiAlert, (dialog, which) -> {
             new FavsSettings(getActivity()).removeFav(position);
             favsList = new FavsSettings(getActivity()).getFavs();
-            adapter=new MapPointAdapter(getContext(), favsList);
+            adapter=new MapPointAdapter(getContext(), favsList, getActivity());
             lvFavs.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         });
-
         builder.setNegativeButton(R.string.optNoAlert, null);
         AlertDialog dialog = builder.create();
         dialog.show();

@@ -26,8 +26,8 @@ public class SaveLocation {
     public void saveLocation(){
         SharedPreferences preferences = context.getSharedPreferences(CLAVE_SAVELOCATION, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-
         editor.putFloat(CLAVE_SAVELOCATION_LONGITUDE, (float) longitude);
         editor.putFloat(CLAVE_SAVELOCATION_LATITUDE, (float) latitude);
+        editor.apply();
     }
 }

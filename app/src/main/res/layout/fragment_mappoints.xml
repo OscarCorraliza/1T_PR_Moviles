@@ -3,13 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.PoolsFragment">
+    tools:context=".fragments.PoolsFragment"
+    android:descendantFocusability="blocksDescendants">
 
         <ListView
             android:id="@+id/lvMapPoints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:dividerHeight="5dp" />
+            android:dividerHeight="5dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:longClickable="true" />
 
 </FrameLayout>

@@ -36,15 +36,12 @@ public class CurrentLocation extends Fragment {
     private MapView mMapView;
     private MapController mMapController;
     GeoPoint myGeoPosition;
-
-
     private ArrayList<OverlayItem> mOverlayItems = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_current_location, container, false);
-        //conseguir el contexto del fragment
         Context fragmentContext = container.getContext();
 
         Configuration.getInstance().load(fragmentContext, PreferenceManager.getDefaultSharedPreferences(fragmentContext));
@@ -54,8 +51,6 @@ public class CurrentLocation extends Fragment {
         setMap(view);
 
         boolean add = mOverlayItems.add(new OverlayItem(getDataIntent.getStringExtra(TITLE), getDataIntent.getStringExtra(DESCRIPTION_KEY), myGeoPosition));
-
-
         ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(mOverlayItems, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
             @Override
             public boolean onItemSingleTapUp(int index, OverlayItem item) {
@@ -70,16 +65,11 @@ public class CurrentLocation extends Fragment {
 
         mOverlay.setFocusItemsOnTap(true);
         mMapView.getOverlays().add(mOverlay);
-
-
-
         return view;
-
-
     }
 
     public void setMap(View view){
-        mMapView = (MapView) view.findViewById(R.id.mapViewCurrentLocation);
+        mMapView = view.findViewById(R.id.mapViewCurrentLocation);
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
         mMapController = (MapController) mMapView.getController();

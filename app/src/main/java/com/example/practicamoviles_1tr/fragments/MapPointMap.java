@@ -1,17 +1,20 @@
 package com.example.practicamoviles_1tr.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.example.practicamoviles_1tr.R;
+import com.example.practicamoviles_1tr.models.MapPoint;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
@@ -22,9 +25,8 @@ import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static com.example.practicamoviles_1tr.common.Constantes.CURRENT_LOCATION_LATITUDE;
-import static com.example.practicamoviles_1tr.common.Constantes.CURRENT_LOCATION_LONGITUDE;
 import static com.example.practicamoviles_1tr.common.Constantes.DESCRIPTION_KEY;
 import static com.example.practicamoviles_1tr.common.Constantes.MAPPOINT_LATITUDE;
 import static com.example.practicamoviles_1tr.common.Constantes.MAPPOINT_LONGITUDE;
@@ -50,13 +52,10 @@ public class MapPointMap extends Fragment {
         Configuration.getInstance().load(fragmentContext, PreferenceManager.getDefaultSharedPreferences(fragmentContext));
 
         Intent getDataIntent = getActivity().getIntent();
-        setMap(view);
-
         mpGeoposition = new GeoPoint(getArguments().getDouble(MAPPOINT_LATITUDE), getArguments().getDouble(MAPPOINT_LONGITUDE));
 
+        setMap(view);
         boolean add = mOverlayItems.add(new OverlayItem(getDataIntent.getStringExtra(TITLE), getDataIntent.getStringExtra(DESCRIPTION_KEY), mpGeoposition));
-
-
         ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(mOverlayItems, new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
             @Override
             public boolean onItemSingleTapUp(int index, OverlayItem item) {
@@ -68,26 +67,29 @@ public class MapPointMap extends Fragment {
                 return false;
             }
         },getActivity().getApplicationContext());
-
         mOverlay.setFocusItemsOnTap(true);
         mMapView.getOverlays().add(mOverlay);
-
-
-
         return view;
-
-
     }
 
-    public void setMap(View view){
-        mMapView = (MapView) view.findViewById(R.id.mapViewMapPoint);
+    private void setMap(View view){
+        mMapView = view.findViewById(R.id.mapViewMapPoint);
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
         mMapController = (MapController) mMapView.getController();
         mMapController.setZoom(18);
 
-        //mMapController.setCenter(myGeoPosition);
         mMapController.setCenter(mpGeoposition);
 
+    }
+
+    public void goToMap(List<MapPoint> mapPoints, int position, FragmentActivity fragmentActivity){
+        FragmentManager manager =  fragmentActivity.getSupportFragmentManager();
+        Bundle bundle = new Bundle();
+        bundle.putDouble(MAPPOINT_LATITUDE, mapPoints.get(position).getLocation().getLatitude());
+        bundle.putDouble(MAPPOINT_LONGITUDE, mapPoints.get(position).getLocation().getLongitude());
+        Fragment fragment = new MapPointMap();
+        fragment.setArguments(bundle);
+        manager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
     }
 }
